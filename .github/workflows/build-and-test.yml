@@ -1,9 +1,11 @@
 name: Student Aggregator
 
 on:
-  push:
+  pull_request:
     branches:
-      - '!master'
+      - master
+permissions:
+  contents: read
 
 jobs:
   build:
