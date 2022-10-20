@@ -26,6 +26,7 @@ func RegisterLog(cfg *config.Logging) (logger.Logger, error) {
 		Encoding:      cfg.Encoding,
 		EncoderConfig: encoderCfg,
 		OutputPaths:   []string{"stdout"},
+		DisableCaller: !cfg.EnableCaller,
 	}
 
 	zapLog, err := loggerConfig.Build(zap.AddCaller(), zap.AddCallerSkip(1))

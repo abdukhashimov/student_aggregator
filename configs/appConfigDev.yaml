@@ -1,0 +1,12 @@
+project:
+  name: &projectName Student Aggregator
+  version: 1.0.0
+logging:
+  projectName: *projectName
+  code: logrus
+  encoding: console
+  level: debug
+  dateTimeFormat: 2006-01-02 15:04:05
+  dateFormat: 2006-01-02
+  enableCaller: false
+  devMode: true
