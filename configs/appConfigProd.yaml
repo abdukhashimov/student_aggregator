@@ -1,0 +1,12 @@
+project:
+  name: &projectName Student Aggregator
+  version: 1.0.0
+logging:
+  projectName: *projectName
+  code: zap
+  encoding: json
+  level: warning
+  dateTimeFormat: 2006-01-02 15:04:05
+  dateFormat: 2006-01-02
+  enableCaller: true
+  devMode: false

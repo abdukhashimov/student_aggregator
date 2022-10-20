@@ -18,21 +18,21 @@ const (
 // Logging represents logger handler
 type Logging struct {
 	// project name
-	ProjectName string `env:"PROJECT_NAME,default=golang_project" yaml:"projectName"`
+	ProjectName string `yaml:"projectName"`
 	// log library name
-	Code string `env:"LOG_CODE,default=logrus" yaml:"logCode"`
+	Code string `yaml:"code"`
 	// log encoding
-	Encoding string `env:"LOG_ENCODING,default=console" yaml:"logEncoding"`
+	Encoding string `yaml:"encoding"`
 	// logging level
-	LogLevel string `env:"LOG_LEVEL,default=info" yaml:"logLevel"`
+	LogLevel string `yaml:"level"`
 	// date time format
-	DateTimeFormat string `env:"DATE_TIME_FORMAT,default:2006-01-02 15:04:05" yaml:"dateTimeFormat"`
+	DateTimeFormat string `yaml:"dateTimeFormat"`
 	// date format
-	DateFormat string `env:"DATE_FORMAT,default:2006-01-02" yaml:"dateFormat"`
+	DateFormat string `yaml:"dateFormat"`
 	// show caller in log message
 	EnableCaller bool `yaml:"enableCaller"`
 	// development mode marker
-	DevMode bool `env:"DEV_MODE,default=false" yaml:"devMode"`
+	DevMode bool `yaml:"devMode"`
 	// output writer
 	Out io.Writer
 }
