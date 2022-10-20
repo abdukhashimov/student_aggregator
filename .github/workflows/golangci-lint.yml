@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
 
-jjobs:
+jobs:
   # ...
   lint-go:
     runs-on: ubuntu-latest
