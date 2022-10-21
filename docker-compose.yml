@@ -1,11 +1,15 @@
 version: "3.9"
 services:
-#  postgres:
-#    image: postgres:14-alpine
-#    environment:
-#      - POSTGRES_USER=root
-#      - POSTGRES_PASSWORD=secret
-#      - POSTGRES_DB=pg
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: aggregator
+
   api:
     build:
       context: .
@@ -13,7 +17,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_SOURCE=postgresql://root:secret@postgres:5432/pg?sslmode=disable
-#    depends_on:
-#      - postgres
+      MONGODB_URI: mongodb://root:root@localhost:27017/students
+    depends_on:
+      - mongo
     command: [ "/app/aggregator" ]
