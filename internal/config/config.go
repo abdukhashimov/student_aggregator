@@ -6,7 +6,7 @@ import (
 
 	logConfig "github.com/abdukhashimov/student_aggregator/pkg/logger/config"
 
-	"github.com/Netflix/go-env"
+	env "github.com/Netflix/go-env"
 	"github.com/joho/godotenv"
 	"gopkg.in/yaml.v3"
 )
@@ -21,12 +21,20 @@ const (
 type Config struct {
 	Logging logConfig.Logging `yaml:"logging"`
 	Project struct {
-		Name    string `env:"PROJECT_NAME" yaml:"name"`
-		Mode    string `env:"APPLICATION_MODE"`
-		Version string `env:"APPLICATION_VERSION" yaml:"version"`
+		Name                   string `env:"PROJECT_NAME" yaml:"name"`
+		Mode                   string `env:"APPLICATION_MODE"`
+		Version                string `env:"APPLICATION_VERSION" yaml:"version"`
+		Salt                   string `env:"APP_SALT"`
+		GracefulTimeoutSeconds int    `yaml:"gracefulTimeoutSeconds"`
 	} `yaml:"project"`
 	MongoDB struct {
-		URI string `env:"MONGODB_URI"`
+		URI      string `env:"MONGODB_URI"`
+		User     string `env:"MONGODB_USER"`
+		Password string `env:"MONGODB_PASSWORD"`
+		Database string `yaml:"database"`
+	} `yaml:"mongodb"`
+	Http struct {
+		Port int
 	}
 }
 

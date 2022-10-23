@@ -1,6 +1,9 @@
 project:
   name: &projectName Student Aggregator
+  gracefulTimeoutSeconds: 5
   version: 1.0.0
+mongodb:
+  database: aggregator
 logging:
   projectName: *projectName
   code: logrus
