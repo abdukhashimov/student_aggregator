@@ -33,12 +33,20 @@ func validateGeneralConfig(cfg *Config) error {
 		return buildError("project version")
 	}
 
+	if cfg.Project.Salt == "" {
+		return buildError("project salt")
+	}
+
 	return nil
 }
 
 func validateMongoDbConfig(cfg *Config) error {
 	if cfg.MongoDB.URI == "" {
 		return buildError("mongodb uri")
+	}
+
+	if cfg.MongoDB.Database == "" {
+		return buildError("database")
 	}
 
 	return nil
