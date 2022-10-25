@@ -17,9 +17,11 @@ import (
 )
 
 type Server struct {
-	server      *http.Server
-	router      *mux.Router
-	userService ports.UsersService
+	server           *http.Server
+	router           *mux.Router
+	userService      ports.UsersService
+	config           *config.Config
+	hmacSampleSecret []byte
 }
 
 func NewServer(db *mongo.Database, cfg *config.Config) *Server {
@@ -29,7 +31,9 @@ func NewServer(db *mongo.Database, cfg *config.Config) *Server {
 			ReadTimeout:  5 * time.Second,
 			IdleTimeout:  5 * time.Second,
 		},
-		router: mux.NewRouter().StrictSlash(true),
+		router:           mux.NewRouter().StrictSlash(true),
+		config:           cfg,
+		hmacSampleSecret: []byte(cfg.Project.JwtSecret),
 	}
 
 	repos := mongodb.NewRepositories(db)

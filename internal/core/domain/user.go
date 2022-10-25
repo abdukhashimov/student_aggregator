@@ -1,11 +1,11 @@
 package domain
 
 type User struct {
-	ID           uint         `json:"id"`
-	Username     string       `json:"username"`
-	Email        string       `json:"email"`
-	Password     string       `json:"password"`
-	RefreshToken RefreshToken `json:"refresh_token"`
+	ID           string         `json:"id" bson:"_id,omitempty"`
+	Username     string         `json:"username"`
+	Email        string         `json:"email"`
+	Password     string         `json:"-"`
+	RefreshToken []RefreshToken `json:"-"`
 }
 
 type SignUpUserInput struct {

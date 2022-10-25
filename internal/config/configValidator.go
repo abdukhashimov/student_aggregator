@@ -37,6 +37,10 @@ func validateGeneralConfig(cfg *Config) error {
 		return buildError("project salt")
 	}
 
+	if cfg.Project.JwtSecret == "" {
+		return buildError("jtw secret")
+	}
+
 	return nil
 }
 

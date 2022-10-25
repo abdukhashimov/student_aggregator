@@ -24,3 +24,16 @@ func (s *Server) loginUser() http.HandlerFunc {
 		writeJSON(w, http.StatusOK, M{"tokens": tokens})
 	}
 }
+
+func (s *Server) getCurrentUser() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		user, err := userFromContext(ctx)
+		if err != nil {
+			sendServerError(w, err)
+			return
+		}
+
+		writeJSON(w, http.StatusOK, M{"user": user})
+	}
+}

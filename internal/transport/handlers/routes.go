@@ -20,15 +20,20 @@ func (s *Server) routes() {
 		noAuth.Handle("/users/login", s.loginUser()).Methods(MethodPost)
 	}
 
+	authApiRoutes := apiRouter.PathPrefix("").Subrouter()
+	authApiRoutes.Use(s.authenticate)
+	{
+		authApiRoutes.Handle("/user", s.getCurrentUser()).Methods(MethodGet)
+	}
 }
 
-func healthCheck() http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+func healthCheck() http.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request) {
 		resp := M{
 			"status":  "available",
 			"message": "healthy",
 			"data":    M{"hello": "world"},
 		}
 		writeJSON(rw, http.StatusOK, resp)
-	})
+	}
 }
