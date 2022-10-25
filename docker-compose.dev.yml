@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongo_aggregator
+    ports:
+    - "27017:27017"
+    volumes:
+    - aggregator_mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: aggregator
+
+volumes:
+  aggregator_mongo_data: {}
