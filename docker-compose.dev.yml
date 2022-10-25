@@ -8,6 +8,7 @@ services:
     - "27017:27017"
     volumes:
     - aggregator_mongo_data:/data/db
+    - ./scripts/mongo-init/:/docker-entrypoint-initdb.d/:ro
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
