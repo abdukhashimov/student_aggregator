@@ -2,11 +2,16 @@ package mongodb
 
 import (
 	"context"
+	"errors"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+
 
 	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
 	"github.com/abdukhashimov/student_aggregator/internal/core/ports"
 	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var _ ports.UsersStore = (*UsersRepo)(nil)
@@ -47,4 +52,23 @@ func (u *UsersRepo) GetByCredentials(ctx context.Context, email, password string
 func (u *UsersRepo) GetByRefreshToken(ctx context.Context, refreshToken string) (*domain.User, error) {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (u *UsersRepo) GetById(ctx context.Context, id string) (*domain.User, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	var user domain.User
+	if err := u.db.FindOne(ctx, bson.M{
+		"_id": objectId,
+	}).Decode(&user); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, domain.ErrUserNotFound
+		}
+
+		return nil, err
+	}
+
+	return &user, nil
 }

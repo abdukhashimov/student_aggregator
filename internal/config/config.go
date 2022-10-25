@@ -26,6 +26,7 @@ type Config struct {
 		Version                string `env:"APPLICATION_VERSION" yaml:"version"`
 		Salt                   string `env:"APP_SALT"`
 		GracefulTimeoutSeconds int    `yaml:"gracefulTimeoutSeconds"`
+		JwtSecret              string `env:"APPLICATION_JWT_SECRET"`
 	} `yaml:"project"`
 	MongoDB struct {
 		URI      string `env:"MONGODB_URI"`

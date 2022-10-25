@@ -52,3 +52,9 @@ func (us *UsersService) SignIn(ctx context.Context, input domain.SignInUserInput
 func (us *UsersService) RefreshTokens(ctx context.Context, refreshToken string) (*domain.Tokens, error) {
 	return nil, nil
 }
+
+func (us *UsersService) UserById(ctx context.Context, id string) (*domain.User, error) {
+	user, err := us.repo.GetById(ctx, id)
+
+	return user, err
+}
