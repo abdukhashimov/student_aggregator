@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
+	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
 )
 
 func (s *Server) loginUser() http.HandlerFunc {
@@ -15,14 +16,29 @@ func (s *Server) loginUser() http.HandlerFunc {
 			return
 		}
 
-		tokens, err := s.userService.SignIn(r.Context(), input)
+		userId, err := s.userService.SignIn(r.Context(), input)
 
-		if err != nil || tokens == nil {
-			sendUnauthorizedError(w, input.Email)
+		if err != nil {
+			if err == domain.ErrUserNotFound {
+				sendUnauthorizedError(w, input.Email)
+				return
+			}
+			sendServerError(w, err)
 			return
 		}
 
-		writeJSON(w, http.StatusOK, M{"tokens": tokens})
+		tokens, err := s.userService.GenerateUserTokens(r.Context(), userId)
+		if err != nil {
+			sendServerError(w, err)
+			return
+		}
+
+		logger.Log.Debugf("user successful logged in. userId: %s", userId)
+
+		writeJSON(w, http.StatusOK, M{"tokens": domain.Tokens{
+			AccessToken:  tokens.AccessToken,
+			RefreshToken: tokens.RefreshToken,
+		}})
 	}
 }
 

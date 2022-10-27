@@ -38,7 +38,7 @@ func main() {
 }
 
 func runHTTP(port int) {
-	cfg := config.Load()
+	cfg := config.Load(config.TRANSPORT_HTTP)
 	log, err := factory.Build(&cfg.Logging)
 	if err != nil {
 		panic(err)

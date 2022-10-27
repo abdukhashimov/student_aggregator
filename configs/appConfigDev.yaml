@@ -13,3 +13,6 @@ logging:
   dateFormat: 2006-01-02
   enableCaller: false
   devMode: true
+http:
+  accessTokenTTLMinutes: 30
+  refreshTokenTTLHours: 24

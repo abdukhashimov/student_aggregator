@@ -37,8 +37,18 @@ func validateGeneralConfig(cfg *Config) error {
 		return buildError("project salt")
 	}
 
-	if cfg.Project.JwtSecret == "" {
-		return buildError("jtw secret")
+	if cfg.Transport == TRANSPORT_HTTP {
+		if cfg.Project.JwtSecret == "" {
+			return buildError("jtw secret")
+		}
+
+		if cfg.Http.AccessTokenTTLMinutes == 0 {
+			return buildError("access token ttl")
+		}
+
+		if cfg.Http.RefreshTokenTTLHours == 0 {
+			return buildError("refresh token ttl")
+		}
 	}
 
 	return nil

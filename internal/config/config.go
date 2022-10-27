@@ -12,15 +12,20 @@ import (
 )
 
 type AppMode string
+type Transport string
 
 const (
 	DEVELOPMENT AppMode = "DEVELOPMENT"
 	PRODUCTION  AppMode = "PRODUCTION"
+
+	TRANSPORT_HTTP Transport = "HTTP"
+	TRANSPORT_GRPC Transport = "GRPC"
 )
 
 type Config struct {
-	Logging logConfig.Logging `yaml:"logging"`
-	Project struct {
+	Transport Transport
+	Logging   logConfig.Logging `yaml:"logging"`
+	Project   struct {
 		Name                   string `env:"PROJECT_NAME" yaml:"name"`
 		Mode                   string `env:"APPLICATION_MODE"`
 		Version                string `env:"APPLICATION_VERSION" yaml:"version"`
@@ -35,12 +40,16 @@ type Config struct {
 		Database string `yaml:"database"`
 	} `yaml:"mongodb"`
 	Http struct {
-		Port int
-	}
+		Port                  int
+		AccessTokenTTLMinutes int `yaml:"accessTokenTTLMinutes"`
+		RefreshTokenTTLHours  int `yaml:"refreshTokenTTLHours"`
+	} `yaml:"http"`
 }
 
-func Load() *Config {
-	var cfg Config
+func Load(transport Transport) *Config {
+	cfg := Config{
+		Transport: transport,
+	}
 
 	err := godotenv.Load()
 	if err != nil && !os.IsNotExist(err) {

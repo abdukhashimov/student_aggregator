@@ -11,17 +11,15 @@ import (
 	"github.com/abdukhashimov/student_aggregator/internal/core/repository/mongodb"
 	"github.com/abdukhashimov/student_aggregator/internal/core/services"
 	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
-
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Server struct {
-	server           *http.Server
-	router           *mux.Router
-	userService      ports.UsersService
-	config           *config.Config
-	hmacSampleSecret []byte
+	server      *http.Server
+	router      *mux.Router
+	userService ports.UsersService
+	config      *config.Config
 }
 
 func NewServer(db *mongo.Database, cfg *config.Config) *Server {
@@ -31,9 +29,8 @@ func NewServer(db *mongo.Database, cfg *config.Config) *Server {
 			ReadTimeout:  5 * time.Second,
 			IdleTimeout:  5 * time.Second,
 		},
-		router:           mux.NewRouter().StrictSlash(true),
-		config:           cfg,
-		hmacSampleSecret: []byte(cfg.Project.JwtSecret),
+		router: mux.NewRouter().StrictSlash(true),
+		config: cfg,
 	}
 
 	repos := mongodb.NewRepositories(db)
