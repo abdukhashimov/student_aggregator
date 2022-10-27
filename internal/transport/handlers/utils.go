@@ -56,6 +56,12 @@ func sendInvalidAuthTokenError(w http.ResponseWriter) {
 	writeErrorResponse(w, http.StatusUnauthorized, msg)
 }
 
+func sendInvalidRefreshTokenError(w http.ResponseWriter) {
+	msg := "invalid or missing refresh token"
+	logger.Log.Info(msg)
+	writeErrorResponse(w, http.StatusUnauthorized, msg)
+}
+
 func writeErrorResponse(w http.ResponseWriter, code int, errs interface{}) {
 	writeJSON(w, code, M{"errors": errs})
 }

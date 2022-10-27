@@ -19,6 +19,7 @@ func (s *Server) routes() {
 		noAuth.Handle("/health", healthCheck()).Methods(MethodGet)
 		noAuth.Handle("/users/login", s.loginUser()).Methods(MethodPost)
 		noAuth.Handle("/users", s.createUser()).Methods(MethodPost)
+		noAuth.Handle("/auth/refresh", s.refreshToken()).Methods(MethodPost)
 	}
 
 	authApiRoutes := apiRouter.PathPrefix("").Subrouter()

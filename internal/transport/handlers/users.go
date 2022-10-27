@@ -77,3 +77,37 @@ func (s *Server) getCurrentUser() http.HandlerFunc {
 		writeJSON(w, http.StatusOK, M{"user": user})
 	}
 }
+
+func (s *Server) refreshToken() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		input := domain.TokenInput{}
+
+		if err := readJSON(r.Body, &input); err != nil {
+			sendUnprocessableEntityError(w, err)
+			return
+		}
+
+		user, err := s.userService.UserByRefreshToken(r.Context(), input.Token)
+		if err != nil {
+			if err == domain.ErrUserNotFound {
+				sendInvalidRefreshTokenError(w)
+				return
+			}
+			sendServerError(w, err)
+			return
+		}
+
+		tokens, err := s.userService.GenerateUserTokens(r.Context(), user.ID)
+		if err != nil {
+			sendServerError(w, err)
+			return
+		}
+
+		logger.Log.Debugf("tokens successful refreshed. userId: %s", user.ID)
+
+		writeJSON(w, http.StatusOK, M{"tokens": domain.Tokens{
+			AccessToken:  tokens.AccessToken,
+			RefreshToken: tokens.RefreshToken,
+		}})
+	}
+}

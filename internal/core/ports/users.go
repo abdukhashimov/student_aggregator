@@ -13,6 +13,7 @@ type UsersService interface {
 	UserById(ctx context.Context, id string) (*domain.User, error)
 	GenerateUserTokens(ctx context.Context, id string) (*domain.Tokens, error)
 	UserByAccessToken(ctx context.Context, token string) (*domain.User, error)
+	UserByRefreshToken(ctx context.Context, token string) (*domain.User, error)
 }
 
 type UsersStore interface {

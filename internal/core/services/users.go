@@ -81,6 +81,12 @@ func (us *UsersService) UserByAccessToken(ctx context.Context, token string) (*d
 	return user, err
 }
 
+func (us *UsersService) UserByRefreshToken(ctx context.Context, refreshToken string) (*domain.User, error) {
+	user, err := us.repo.GetByRefreshToken(ctx, refreshToken)
+
+	return user, err
+}
+
 func (us *UsersService) UserById(ctx context.Context, id string) (*domain.User, error) {
 	user, err := us.repo.GetById(ctx, id)
 
