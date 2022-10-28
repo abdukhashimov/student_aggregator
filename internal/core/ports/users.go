@@ -22,5 +22,5 @@ type UsersStore interface {
 	GetByCredentials(ctx context.Context, email, password string) (*domain.User, error)
 	GetByRefreshToken(ctx context.Context, refreshToken string) (*domain.User, error)
 	GetById(ctx context.Context, id string) (*domain.User, error)
-	StoreRefreshToken(ctx context.Context, id string, token domain.RefreshToken) (int, error)
+	StoreRefreshToken(ctx context.Context, id string, token domain.RefreshToken) error
 }

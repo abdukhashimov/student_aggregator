@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/abdukhashimov/student_aggregator/internal/config"
@@ -115,17 +114,13 @@ func (us *UsersService) GenerateUserTokens(ctx context.Context, id string) (*dom
 func (us *UsersService) SetRefreshToken(ctx context.Context, id string, token string) error {
 	tokenExpiresAt := time.Now().Add(time.Hour * time.Duration(us.cfg.Http.RefreshTokenTTLHours))
 
-	modifiedCount, err := us.repo.StoreRefreshToken(ctx, id, domain.RefreshToken{
+	err := us.repo.StoreRefreshToken(ctx, id, domain.RefreshToken{
 		Token:     token,
 		ExpiresAt: tokenExpiresAt,
 	})
 
 	if err != nil {
 		return err
-	}
-
-	if modifiedCount != 1 {
-		return errors.New("update refresh token error")
 	}
 
 	return nil

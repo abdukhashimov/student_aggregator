@@ -4,7 +4,7 @@ import "time"
 
 type RefreshToken struct {
 	Token     string    `json:"token" bson:"token"`
-	ExpiresAt time.Time `json:"expires_at" bson:"expiresAt"`
+	ExpiresAt time.Time `json:"expires_at" bson:"expires_at"`
 }
 
 type Tokens struct {

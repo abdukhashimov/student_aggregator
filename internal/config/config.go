@@ -47,9 +47,7 @@ type Config struct {
 }
 
 func Load(transport Transport) *Config {
-	cfg := Config{
-		Transport: transport,
-	}
+	cfg := Config{Transport: transport}
 
 	err := godotenv.Load()
 	if err != nil && !os.IsNotExist(err) {

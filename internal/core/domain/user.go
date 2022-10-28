@@ -5,7 +5,7 @@ type User struct {
 	Username     string       `json:"username" bson:"username"`
 	Email        string       `json:"email" bson:"email"`
 	Password     string       `json:"-" bson:"password"`
-	RefreshToken RefreshToken `json:"-" bson:"refreshToken"`
+	RefreshToken RefreshToken `json:"-" bson:"refresh_token"`
 }
 
 type SignUpUserInput struct {
