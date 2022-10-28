@@ -13,6 +13,7 @@ type M map[string]interface{}
 func readJSON(body io.Reader, input interface{}) error {
 	return json.NewDecoder(body).Decode(input)
 }
+
 func writeJSON(w http.ResponseWriter, code int, data interface{}) {
 	jsonBytes, err := json.Marshal(data)
 
