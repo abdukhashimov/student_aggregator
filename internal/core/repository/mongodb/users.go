@@ -2,8 +2,10 @@ package mongodb
 
 import (
 	"context"
+
 	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
 	"github.com/abdukhashimov/student_aggregator/internal/core/ports"
+	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -20,8 +22,16 @@ func NewUsersRepo(db *mongo.Database) *UsersRepo {
 }
 
 func (u *UsersRepo) Create(ctx context.Context, user domain.User) error {
-	//TODO implement me
-	panic("implement me")
+
+	res, err := u.db.InsertOne(ctx, user)
+
+	if err != nil {
+		return err
+	}
+
+	logger.Log.Debugf("Created user with %s", res.InsertedID)
+
+	return nil
 }
 
 func (u *UsersRepo) Update(ctx context.Context, inp domain.UpdateUserInput) error {

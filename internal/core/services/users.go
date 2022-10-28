@@ -39,8 +39,7 @@ func (us *UsersService) SignUp(ctx context.Context, input domain.SignUpUserInput
 		Password: hashedPassword,
 	})
 	if err != nil {
-		logger.Log.Errorf("error to create user: %w", err)
-		return nil
+		return err
 	}
 
 	return nil
