@@ -1,14 +1,10 @@
+/*
+Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+*/
 package main
 
-import (
-	"fmt"
-)
-
-func getGreeting() string {
-	return "Hello, world"
-}
+import studentaggregator "github.com/abdukhashimov/student_aggregator/cmd/student_aggregator"
 
 func main() {
-	greeting := getGreeting()
-	fmt.Println(greeting)
+	studentaggregator.Execute()
 }
