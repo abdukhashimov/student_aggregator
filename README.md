@@ -2,6 +2,17 @@
 
 This repository contains the source for the Student Aggregator app
 
+## How to run the application
+```
+go run main.go --help # to see the avaialble commands
+go run main.go grpc --help # to see the available flags for grpc command
+go run main.go http --help # to see the available flags for http
+
+# example to run http server
+go run main.go http --port=8080
+```
+
+
 ### Contribution
 
 Please make sure you follow project code style rules. To prevent code issues please use pre-commit hooks.
