@@ -7,6 +7,10 @@ import (
 	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
 )
 
+type UserProfileResponse struct {
+	User domain.UserProfile `json:"user"`
+}
+
 func (s *Server) loginUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		input := domain.SignInUserInput{}
@@ -74,7 +78,9 @@ func (s *Server) getCurrentUser() http.HandlerFunc {
 			return
 		}
 
-		writeJSON(w, http.StatusOK, M{"user": user})
+		writeJSON(w, http.StatusOK, UserProfileResponse{
+			User: *user.GetProfile(),
+		})
 	}
 }
 
