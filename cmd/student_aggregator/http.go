@@ -1,4 +1,7 @@
-package main
+/*
+Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+*/
+package studentaggregator
 
 import (
 	"context"
@@ -10,34 +13,37 @@ import (
 	"time"
 
 	"github.com/abdukhashimov/student_aggregator/internal/config"
-	"github.com/abdukhashimov/student_aggregator/internal/pkg/clitools"
 	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
 	"github.com/abdukhashimov/student_aggregator/internal/transport/handlers"
 	"github.com/abdukhashimov/student_aggregator/pkg/logger/factory"
 	"github.com/abdukhashimov/student_aggregator/pkg/mongodb"
+	"github.com/spf13/cobra"
 )
 
-func main() {
+// httpCmd represents the http command
+var httpCmd = &cobra.Command{
+	Use:   "http",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
 
-	if len(os.Args) < 2 {
-		fmt.Println("no subcommand")
-		return
-	}
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		portNum, _ := cmd.Flags().GetInt("port")
 
-	comm := clitools.PasreCommand()
-
-	switch comm.Action {
-	case "http":
-		fmt.Printf("HTTP Port is %d \n", comm.Port)
-		runHTTP(comm.Port)
-	case "grpc":
-		fmt.Printf("GRPC Port is %d \n", comm.Port)
-	default:
-		fmt.Println("Unknown subcommand: " + os.Args[1])
-	}
+		serveHttp(portNum)
+	},
 }
 
-func runHTTP(port int) {
+func init() {
+	rootCmd.AddCommand(httpCmd)
+
+	httpCmd.PersistentFlags().Int("port", 8080, "http server port to be served")
+}
+
+func serveHttp(port int) {
 	cfg := config.Load(config.TRANSPORT_HTTP)
 	log, err := factory.Build(&cfg.Logging)
 	if err != nil {
