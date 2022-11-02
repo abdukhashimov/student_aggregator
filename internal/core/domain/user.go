@@ -8,6 +8,12 @@ type User struct {
 	RefreshToken RefreshToken `json:"-" bson:"refresh_token"`
 }
 
+type UserProfile struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
 type SignUpUserInput struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
@@ -24,4 +30,12 @@ type UpdateUserInput struct {
 	Email        *string
 	Password     *string
 	RefreshToken *string
+}
+
+func (u *User) GetProfile() *UserProfile {
+	return &UserProfile{
+		ID:       u.ID,
+		Username: u.Username,
+		Email:    u.Email,
+	}
 }
