@@ -2,7 +2,10 @@ package handlers
 
 import (
 	"context"
+	"fmt"
+	"github.com/abdukhashimov/student_aggregator/docs"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -12,6 +15,7 @@ import (
 	"github.com/abdukhashimov/student_aggregator/internal/core/services"
 	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
 	"github.com/gorilla/mux"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -47,10 +51,35 @@ func NewServer(db *mongo.Database, cfg *config.Config) *Server {
 	return &s
 }
 
+// @title Student Aggregator API
+// @description This API contains the source for the Student Aggregator app
+
+// @securityDefinitions.apikey UsersAuth
+// @in header
+// @name Authorization
+
+// @BasePath /api/v1
+
+// Run initializes http server
 func (s *Server) Run(port string) error {
 	if !strings.HasPrefix(port, ":") {
 		port = ":" + port
 	}
+	portInt, err := strconv.Atoi(port[1:])
+	if err != nil {
+		panic(err)
+	}
+
+	if s.config.Project.SwaggerEnabled {
+		docs.SwaggerInfo.Version = s.config.Project.Version
+
+		s.router.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
+			httpSwagger.URL(fmt.Sprintf("http://localhost:%d/swagger/doc.json", portInt)),
+		)).Methods(http.MethodGet)
+
+		logger.Log.Infof("swagger is enabled")
+	}
+
 	s.server.Addr = port
 	logger.Log.Infof("server starting on %s", port)
 

@@ -1,0 +1,165 @@
+basePath: /api/v1
+definitions:
+  domain.SignInUserInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  domain.SignUpUserInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  domain.TokenInput:
+    properties:
+      token:
+        type: string
+    type: object
+  domain.Tokens:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  domain.UserProfile:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+  handlers.UserProfileResponse:
+    properties:
+      user:
+        $ref: '#/definitions/domain.UserProfile'
+    type: object
+info:
+  contact: {}
+  description: This API contains the source for the Student Aggregator app
+  title: Student Aggregator API
+paths:
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: user refresh tokens process
+      parameters:
+      - description: query params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.TokenInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+      summary: User Refresh Tokens
+      tags:
+      - user-auth
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: Health Check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Health Check
+      tags:
+      - health
+  /user:
+    get:
+      consumes:
+      - application/json
+      description: retrieves user profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.UserProfileResponse'
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
+      summary: User Profile
+      tags:
+      - user
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: user sign up process
+      parameters:
+      - description: query params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SignUpUserInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+      summary: User SignUp
+      tags:
+      - user-auth
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: user sign in process
+      parameters:
+      - description: query params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SignInUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Tokens'
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+      summary: User SignIn
+      tags:
+      - user-auth
+securityDefinitions:
+  UsersAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

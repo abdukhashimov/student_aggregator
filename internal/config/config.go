@@ -32,6 +32,7 @@ type Config struct {
 		Salt                   string `env:"APP_SALT"`
 		GracefulTimeoutSeconds int    `yaml:"gracefulTimeoutSeconds"`
 		JwtSecret              string `env:"APPLICATION_JWT_SECRET"`
+		SwaggerEnabled         bool   `yaml:"swaggerEnabled"`
 	} `yaml:"project"`
 	MongoDB struct {
 		URI      string `env:"MONGODB_URI"`

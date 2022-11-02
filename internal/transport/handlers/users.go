@@ -11,6 +11,16 @@ type UserProfileResponse struct {
 	User domain.UserProfile `json:"user"`
 }
 
+// @Summary User SignIn
+// @Description user sign in process
+// @Tags user-auth
+// @Param request body domain.SignInUserInput true "query params"
+// @Success 200 {object} domain.Tokens
+// @Failure 422
+// @Failure 500
+// @Accept json
+// @Produce json
+// @Router /users/login [post]
 func (s *Server) loginUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		input := domain.SignInUserInput{}
@@ -46,6 +56,16 @@ func (s *Server) loginUser() http.HandlerFunc {
 	}
 }
 
+// @Summary User SignUp
+// @Description user sign up process
+// @Tags user-auth
+// @Param request body domain.SignUpUserInput true "query params"
+// @Success 201
+// @Failure 422
+// @Failure 500
+// @Accept json
+// @Produce json
+// @Router /users [post]
 func (s *Server) createUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		input := domain.SignUpUserInput{}
@@ -69,6 +89,16 @@ func (s *Server) createUser() http.HandlerFunc {
 	}
 }
 
+// @Summary User Profile
+// @Description retrieves user profile
+// @Security UsersAuth
+// @Tags user
+// @Success 200 {object} UserProfileResponse
+// @Failure 401
+// @Failure 500
+// @Accept json
+// @Produce json
+// @Router /user [get]
 func (s *Server) getCurrentUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
@@ -84,6 +114,16 @@ func (s *Server) getCurrentUser() http.HandlerFunc {
 	}
 }
 
+// @Summary User Refresh Tokens
+// @Description user refresh tokens process
+// @Tags user-auth
+// @Param request body domain.TokenInput true "query params"
+// @Success 201
+// @Failure 422
+// @Failure 500
+// @Accept json
+// @Produce json
+// @Router /auth/refresh [post]
 func (s *Server) refreshToken() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		input := domain.TokenInput{}
