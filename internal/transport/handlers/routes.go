@@ -29,6 +29,14 @@ func (s *Server) routes() {
 	}
 }
 
+// @Summary Health Check
+// @Description Health Check
+// @Tags health
+// @Success 200
+// @Failure 500
+// @Accept json
+// @Produce json
+// @Router /health [get]
 func healthCheck() http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		resp := M{
