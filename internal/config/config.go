@@ -45,6 +45,14 @@ type Config struct {
 		AccessTokenTTLMinutes int `yaml:"accessTokenTTLMinutes"`
 		RefreshTokenTTLHours  int `yaml:"refreshTokenTTLHours"`
 	} `yaml:"http"`
+	Storage struct {
+		URI             string `env:"STORAGE_URI"`
+		User            string `env:"STORAGE_MINIO_USER"`
+		Password        string `env:"STORAGE_MINIO_PASSWORD"`
+		AccessKeyID     string `env:"STORAGE_ACCESS_KEY_ID"`
+		SecretAccessKey string `env:"STORAGE_SECRET_ACCESS_KEY"`
+		BucketName      string `yaml:"bucketName"`
+	} `yaml:"storage"`
 }
 
 func Load(transport Transport) *Config {
