@@ -17,3 +17,5 @@ logging:
 http:
   accessTokenTTLMinutes: 30
   refreshTokenTTLHours: 24
+storage:
+  bucketName: aggregator

@@ -17,6 +17,10 @@ func validateConfig(cfg *Config) error {
 		return err
 	}
 
+	if err := validateStorageConfig(cfg); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -77,6 +81,34 @@ func validateLoggingConfig(cfg *Config) error {
 
 	if cfg.Logging.DateTimeFormat == "" {
 		return buildError("logger datetime format")
+	}
+
+	return nil
+}
+
+func validateStorageConfig(cfg *Config) error {
+	if cfg.Storage.URI == "" {
+		return buildError("storage user format")
+	}
+
+	if cfg.Storage.AccessKeyID == "" {
+		return buildError("storage access key ID format")
+	}
+	if cfg.Storage.SecretAccessKey == "" {
+		return buildError("storage secret access key format")
+	}
+
+	if cfg.Storage.BucketName == "" {
+		return buildError("storage bucket name format")
+	}
+
+	if cfg.Project.Mode == string(DEVELOPMENT) {
+		if cfg.Storage.User == "" {
+			return buildError("storage user format")
+		}
+		if len(cfg.Storage.Password) < 8 {
+			return buildError("storage password min length is 8")
+		}
 	}
 
 	return nil
