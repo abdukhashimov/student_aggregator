@@ -34,6 +34,7 @@ services:
       MONGODB_URI: mongodb://root:root@localhost:27017/students
     depends_on:
       - mongo
+      - minio
     command: [ "/app/aggregator" ]
 
 volumes:
