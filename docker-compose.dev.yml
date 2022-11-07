@@ -14,5 +14,20 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
       MONGO_INITDB_DATABASE: aggregator
 
+  minio:
+    image: minio/minio:RELEASE.2022-10-29T06-21-33Z
+    container_name: aggregator_minio_storage
+    ports:
+    - "9000:9000"
+    - "9001:9001"
+    volumes:
+    - aggregator_minio_data:/data
+    hostname: aggregator_minio_host
+    environment:
+      MINIO_ROOT_USER: ${STORAGE_MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${STORAGE_MINIO_PASSWORD}
+    command: server /data --console-address ":9001"
+
 volumes:
   aggregator_mongo_data: {}
+  aggregator_minio_data: {}
