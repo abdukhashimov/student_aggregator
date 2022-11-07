@@ -7,13 +7,16 @@ import (
 )
 
 type Services struct {
-	Users ports.UsersService
+	Users   ports.UsersService
+	Storage ports.StorageService
 }
 
 func NewServices(repos *repository.Repositories, cfg *config.Config) *Services {
 	usersService := NewUsersService(repos.Users, cfg)
+	storageService := NewStorageService(cfg)
 
 	return &Services{
-		Users: usersService,
+		Users:   usersService,
+		Storage: storageService,
 	}
 }

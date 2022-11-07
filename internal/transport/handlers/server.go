@@ -3,11 +3,12 @@ package handlers
 import (
 	"context"
 	"fmt"
-	"github.com/abdukhashimov/student_aggregator/docs"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/abdukhashimov/student_aggregator/docs"
 
 	"github.com/abdukhashimov/student_aggregator/internal/config"
 	"github.com/abdukhashimov/student_aggregator/internal/core/ports"
@@ -15,18 +16,20 @@ import (
 	"github.com/abdukhashimov/student_aggregator/internal/core/services"
 	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
 	"github.com/gorilla/mux"
+	"github.com/minio/minio-go/v7"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Server struct {
-	server      *http.Server
-	router      *mux.Router
-	userService ports.UsersService
-	config      *config.Config
+	server         *http.Server
+	router         *mux.Router
+	userService    ports.UsersService
+	storageService ports.StorageService
+	config         *config.Config
 }
 
-func NewServer(db *mongo.Database, cfg *config.Config) *Server {
+func NewServer(db *mongo.Database, storageClient *minio.Client, cfg *config.Config) *Server {
 	s := Server{
 		server: &http.Server{
 			WriteTimeout: 5 * time.Second,
@@ -42,6 +45,10 @@ func NewServer(db *mongo.Database, cfg *config.Config) *Server {
 
 	servs := services.NewServices(repos, cfg)
 	s.userService = servs.Users
+
+	s.storageService = &services.StorageService{}
+	s.storageService.SetClient(storageClient)
+
 	logger.Log.Info("services successfully initialized")
 
 	s.routes()

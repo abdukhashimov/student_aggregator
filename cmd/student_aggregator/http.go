@@ -16,6 +16,7 @@ import (
 	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
 	"github.com/abdukhashimov/student_aggregator/internal/transport/handlers"
 	"github.com/abdukhashimov/student_aggregator/pkg/logger/factory"
+	"github.com/abdukhashimov/student_aggregator/pkg/minio"
 	"github.com/abdukhashimov/student_aggregator/pkg/mongodb"
 	"github.com/spf13/cobra"
 )
@@ -61,7 +62,10 @@ func serveHttp(port int) {
 	db := mongoClient.Database(cfg.MongoDB.Database)
 	log.Info("mongo db client successfully initialized")
 
-	server := handlers.NewServer(db, cfg)
+	storageClient := minio.NewClient(cfg.Storage.URI, cfg.Storage.AccessKeyID, cfg.Storage.SecretAccessKey)
+	logger.Log.Info("Minio connection success")
+
+	server := handlers.NewServer(db, storageClient, cfg)
 
 	go func() {
 		err = server.Run(fmt.Sprintf("%d", cfg.Http.Port))
