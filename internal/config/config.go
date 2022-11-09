@@ -25,34 +25,42 @@ const (
 type Config struct {
 	Transport Transport
 	Logging   logConfig.Logging `yaml:"logging"`
-	Project   struct {
-		Name                   string `env:"PROJECT_NAME" yaml:"name"`
-		Mode                   string `env:"APPLICATION_MODE"`
-		Version                string `env:"APPLICATION_VERSION" yaml:"version"`
-		Salt                   string `env:"APP_SALT"`
-		GracefulTimeoutSeconds int    `yaml:"gracefulTimeoutSeconds"`
-		JwtSecret              string `env:"APPLICATION_JWT_SECRET"`
-		SwaggerEnabled         bool   `yaml:"swaggerEnabled"`
-	} `yaml:"project"`
-	MongoDB struct {
-		URI      string `env:"MONGODB_URI"`
-		User     string `env:"MONGODB_USER"`
-		Password string `env:"MONGODB_PASSWORD"`
-		Database string `yaml:"database"`
-	} `yaml:"mongodb"`
-	Http struct {
-		Port                  int
-		AccessTokenTTLMinutes int `yaml:"accessTokenTTLMinutes"`
-		RefreshTokenTTLHours  int `yaml:"refreshTokenTTLHours"`
-	} `yaml:"http"`
-	Storage struct {
-		URI             string `env:"STORAGE_URI"`
-		User            string `env:"STORAGE_MINIO_USER"`
-		Password        string `env:"STORAGE_MINIO_PASSWORD"`
-		AccessKeyID     string `env:"STORAGE_ACCESS_KEY_ID"`
-		SecretAccessKey string `env:"STORAGE_SECRET_ACCESS_KEY"`
-		BucketName      string `yaml:"bucketName"`
-	} `yaml:"storage"`
+	Project   ProjectConfig     `yaml:"project"`
+	MongoDB   MongoDBConfig     `yaml:"mongodb"`
+	Http      HttpConfig        `yaml:"http"`
+	Storage   StorageConfig     `yaml:"storage"`
+}
+
+type ProjectConfig struct {
+	Name                   string `env:"PROJECT_NAME" yaml:"name"`
+	Mode                   string `env:"APPLICATION_MODE"`
+	Version                string `env:"APPLICATION_VERSION" yaml:"version"`
+	Salt                   string `env:"APP_SALT"`
+	GracefulTimeoutSeconds int    `yaml:"gracefulTimeoutSeconds"`
+	JwtSecret              string `env:"APPLICATION_JWT_SECRET"`
+	SwaggerEnabled         bool   `yaml:"swaggerEnabled"`
+}
+
+type MongoDBConfig struct {
+	URI      string `env:"MONGODB_URI"`
+	User     string `env:"MONGODB_USER"`
+	Password string `env:"MONGODB_PASSWORD"`
+	Database string `yaml:"database"`
+}
+
+type HttpConfig struct {
+	Port                  int
+	AccessTokenTTLMinutes int `yaml:"accessTokenTTLMinutes"`
+	RefreshTokenTTLHours  int `yaml:"refreshTokenTTLHours"`
+}
+
+type StorageConfig struct {
+	URI             string `env:"STORAGE_URI"`
+	User            string `env:"STORAGE_MINIO_USER"`
+	Password        string `env:"STORAGE_MINIO_PASSWORD"`
+	AccessKeyID     string `env:"STORAGE_ACCESS_KEY_ID"`
+	SecretAccessKey string `env:"STORAGE_SECRET_ACCESS_KEY"`
+	BucketName      string `yaml:"bucketName"`
 }
 
 func Load(transport Transport) *Config {
