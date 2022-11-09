@@ -34,8 +34,8 @@ func NewMockUsersService() *mockUsersService {
 	}
 }
 
-func (m *mockUsersService) SignUp(ctx context.Context, input domain.SignUpUserInput) error {
-	return nil
+func (m *mockUsersService) SignUp(ctx context.Context, input domain.SignUpUserInput) (string, error) {
+	return "", nil
 }
 
 func (m *mockUsersService) SignIn(ctx context.Context, input domain.SignInUserInput) (string, error) {

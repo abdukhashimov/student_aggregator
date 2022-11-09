@@ -29,7 +29,7 @@ type UpdateUserInput struct {
 	Username     *string
 	Email        *string
 	Password     *string
-	RefreshToken *string
+	RefreshToken *RefreshToken
 }
 
 func (u *User) GetProfile() *UserProfile {

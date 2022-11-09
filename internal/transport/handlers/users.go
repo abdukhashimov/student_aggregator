@@ -78,7 +78,7 @@ func (s *Server) createUser() http.HandlerFunc {
 
 		//ToDo: add input validation
 
-		err = s.userService.SignUp(r.Context(), input)
+		_, err = s.userService.SignUp(r.Context(), input)
 		if err != nil {
 			// toDo: check other error types
 			writeJSON(w, http.StatusInternalServerError, M{"message": "internal error"})

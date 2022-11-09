@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -26,20 +27,20 @@ func NewUsersRepo(db *mongo.Database) *UsersRepo {
 	}
 }
 
-func (ur *UsersRepo) Create(ctx context.Context, user domain.User) error {
+func (ur *UsersRepo) Create(ctx context.Context, user domain.User) (string, error) {
 
 	res, err := ur.db.InsertOne(ctx, user)
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	logger.Log.Debugf("Created user with %s", res.InsertedID)
 
-	return nil
+	return fmt.Sprintf("%s", res.InsertedID), nil
 }
 
-func (ur *UsersRepo) Update(ctx context.Context, inp domain.UpdateUserInput) error {
+func (ur *UsersRepo) Update(ctx context.Context, id string, inp domain.UpdateUserInput) error {
 	//TODO implement me
 	panic("implement me")
 }

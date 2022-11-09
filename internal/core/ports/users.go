@@ -7,7 +7,7 @@ import (
 )
 
 type UsersService interface {
-	SignUp(ctx context.Context, input domain.SignUpUserInput) error
+	SignUp(ctx context.Context, input domain.SignUpUserInput) (string, error)
 	SignIn(ctx context.Context, input domain.SignInUserInput) (string, error)
 	SetRefreshToken(ctx context.Context, id string, token string) error
 	UserById(ctx context.Context, id string) (*domain.User, error)
@@ -17,8 +17,8 @@ type UsersService interface {
 }
 
 type UsersStore interface {
-	Create(ctx context.Context, user domain.User) error
-	Update(ctx context.Context, inp domain.UpdateUserInput) error
+	Create(ctx context.Context, user domain.User) (string, error)
+	Update(ctx context.Context, id string, inp domain.UpdateUserInput) error
 	GetByCredentials(ctx context.Context, email, password string) (*domain.User, error)
 	GetByRefreshToken(ctx context.Context, refreshToken string) (*domain.User, error)
 	GetById(ctx context.Context, id string) (*domain.User, error)

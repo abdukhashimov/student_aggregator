@@ -169,7 +169,7 @@ func TestCreateUser(t *testing.T) {
 			mt.AddMockResponses(tc.mongoRes)
 			usersRepo := NewUsersRepo(mt.DB)
 
-			err := usersRepo.Create(context.Background(), domain.User{
+			_, err := usersRepo.Create(context.Background(), domain.User{
 				Username:     "Test",
 				Email:        "test@ts.ts",
 				Password:     "123456",

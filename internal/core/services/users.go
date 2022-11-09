@@ -33,23 +33,23 @@ func NewUsersService(repo ports.UsersStore, cfg *config.Config) *UsersService {
 	}
 }
 
-func (us *UsersService) SignUp(ctx context.Context, input domain.SignUpUserInput) error {
+func (us *UsersService) SignUp(ctx context.Context, input domain.SignUpUserInput) (string, error) {
 	hashedPassword, err := us.hasher.Hash(input.Password)
 	if err != nil {
 		logger.Log.Errorf("error to create user: %w", err)
-		return domain.ErrInternalError
+		return "", domain.ErrInternalError
 	}
 
-	err = us.repo.Create(ctx, domain.User{
+	id, err := us.repo.Create(ctx, domain.User{
 		Username: input.Username,
 		Email:    input.Email,
 		Password: hashedPassword,
 	})
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return id, nil
 }
 
 func (us *UsersService) SignIn(ctx context.Context, input domain.SignInUserInput) (string, error) {
