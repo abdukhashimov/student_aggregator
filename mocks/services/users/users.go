@@ -2,6 +2,12 @@ package users
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"strconv"
+	"sync"
+	"time"
 
 	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
 	"github.com/abdukhashimov/student_aggregator/internal/core/ports"
@@ -10,63 +16,177 @@ import (
 var _ ports.UsersService = (*mockUsersService)(nil)
 
 type mockUsersService struct {
-	tokenStorage map[string]*domain.User
+	usersStorage map[string]*domain.User
+	lastUserId   string
+	mutex        *sync.RWMutex
+}
+
+type UserProfileResponse struct {
+	User domain.UserProfile `json:"user"`
 }
 
 const (
-	ValidAccessToken   = "first_token"
-	InvalidAccessToken = "second_token"
+	ValidAccessToken   = "validAccessToken"
+	InvalidAccessToken = "invalidAccessToken"
 
-	ValidUserId = "1"
+	ValidUserId       = "1"
+	ValidUserEmail    = "test1@ts.ts"
+	ValidUserPassword = "123456"
+	ValidRefreshToken = "validRefreshToken"
+
+	ExpiredAccessToken  = "expiredAccessToken"
+	ExpiredUserId       = "2"
+	ExpiredUserEmail    = "expired@ts.ts"
+	ExpiredUserPassword = "123456"
+	ExpiredRefreshToken = "expiredRefreshToken"
+
+	NotFoundUserEmail = "notFoundEmail@ts.ts"
+
+	InternalServerErrorUserId       = "500_UserId"
+	InternalServerErrorEmail        = "500@ts.ts"
+	InternalServerErrorRefreshToken = "500_RefreshToken"
+	InternalServerErrorAccessToken  = "500_AccessToken"
 )
+
+var EtalonUser = domain.User{
+	ID:       ValidUserId,
+	Username: "Name 1",
+	Email:    ValidUserEmail,
+	Password: ValidUserPassword,
+	RefreshToken: domain.RefreshToken{
+		Token:     ValidRefreshToken,
+		ExpiresAt: time.Now().Add(1 * time.Hour),
+	},
+}
+
+var ExpiredUser = domain.User{
+	ID:       ExpiredUserId,
+	Username: "Name 1",
+	Email:    ExpiredUserEmail,
+	Password: ExpiredUserPassword,
+	RefreshToken: domain.RefreshToken{
+		Token:     ExpiredRefreshToken,
+		ExpiresAt: time.Now(),
+	},
+}
+
+var EtalonProfileJson, _ = json.Marshal(UserProfileResponse{
+	User: *EtalonUser.GetProfile(),
+})
 
 func NewMockUsersService() *mockUsersService {
 	return &mockUsersService{
-		tokenStorage: map[string]*domain.User{
-			ValidAccessToken: {
-				ID:           ValidUserId,
-				Username:     "Name 1",
-				Email:        "test1@ts.ts",
-				Password:     "123456",
-				RefreshToken: domain.RefreshToken{},
-			},
+		usersStorage: map[string]*domain.User{
+			ValidAccessToken:   &EtalonUser,
+			ExpiredAccessToken: &ExpiredUser,
 		},
+		lastUserId: ExpiredUserId,
+		mutex:      &sync.RWMutex{},
 	}
 }
 
 func (m *mockUsersService) SignUp(ctx context.Context, input domain.SignUpUserInput) (string, error) {
-	return "", nil
+	if input.Email == InternalServerErrorEmail {
+		return "", domain.ErrInternalError
+	}
+
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	for _, u := range m.usersStorage {
+		if u.Email == input.Email {
+			return "", errors.New("email is taken")
+		}
+	}
+
+	m.incrementId()
+	accessToken := fmt.Sprintf("access_token_%d", time.Now().UnixNano())
+	m.usersStorage[accessToken] = &domain.User{
+		ID:       m.lastUserId,
+		Username: input.Username,
+		Email:    input.Email,
+		Password: input.Password,
+		RefreshToken: domain.RefreshToken{
+			Token:     fmt.Sprintf("refresh_token_%d", time.Now().UnixNano()),
+			ExpiresAt: time.Now().Add(1 * time.Hour),
+		},
+	}
+	return m.lastUserId, nil
 }
 
 func (m *mockUsersService) SignIn(ctx context.Context, input domain.SignInUserInput) (string, error) {
-	return "", nil
+	if input.Email == InternalServerErrorEmail {
+		return "", domain.ErrInternalError
+	}
+
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	for _, u := range m.usersStorage {
+		if u.Email == input.Email && u.Password == input.Password {
+			return u.ID, nil
+		}
+	}
+
+	return "", domain.ErrUserNotFound
 }
 
 func (m *mockUsersService) SetRefreshToken(ctx context.Context, id string, token string) error {
+	if id == InternalServerErrorUserId {
+		return domain.ErrInternalError
+	}
+
 	return nil
 }
 
 func (m *mockUsersService) UserById(ctx context.Context, id string) (*domain.User, error) {
-	var user *domain.User
-	for _, us := range m.tokenStorage {
+	if id == InternalServerErrorUserId {
+		return nil, domain.ErrInternalError
+	}
+
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	for _, us := range m.usersStorage {
 		if us.ID == id {
-			user = us
+			usCopy := *us
+			return &usCopy, nil
 		}
 	}
 
-	if user == nil {
-		return nil, domain.ErrUserNotFound
-	}
-
-	return user, nil
+	return nil, domain.ErrUserNotFound
 }
 
 func (m *mockUsersService) GenerateUserTokens(ctx context.Context, id string) (*domain.Tokens, error) {
-	return nil, nil
+	if id == InternalServerErrorUserId {
+		return nil, domain.ErrInternalError
+	}
+
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	for accessToken, u := range m.usersStorage {
+		if u.ID == id {
+			tokens := domain.Tokens{
+				AccessToken:  accessToken,
+				RefreshToken: u.RefreshToken.Token,
+			}
+
+			return &tokens, nil
+		}
+	}
+
+	return nil, domain.ErrUserNotFound
 }
 
 func (m *mockUsersService) UserByAccessToken(ctx context.Context, token string) (*domain.User, error) {
-	user, ok := m.tokenStorage[token]
+	if token == InternalServerErrorAccessToken {
+		return nil, domain.ErrInternalError
+	}
+
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	user, ok := m.usersStorage[token]
 	if !ok {
 		return nil, domain.ErrUserNotFound
 	}
@@ -75,5 +195,25 @@ func (m *mockUsersService) UserByAccessToken(ctx context.Context, token string) 
 }
 
 func (m *mockUsersService) UserByRefreshToken(ctx context.Context, token string) (*domain.User, error) {
-	return nil, nil
+	if token == InternalServerErrorRefreshToken {
+		return nil, domain.ErrInternalError
+	}
+
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	for _, u := range m.usersStorage {
+		if u.RefreshToken.Token == token && u.RefreshToken.ExpiresAt.After(time.Now()) {
+			userCopy := *u
+			return &userCopy, nil
+		}
+	}
+
+	return nil, domain.ErrUserNotFound
+}
+
+func (m *mockUsersService) incrementId() {
+	id, _ := strconv.Atoi(m.lastUserId)
+	id++
+	m.lastUserId = strconv.Itoa(id)
 }

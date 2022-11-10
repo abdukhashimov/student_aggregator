@@ -130,6 +130,9 @@ func (m *mockUsersRepository) GetByCredentials(ctx context.Context, email, passw
 }
 
 func (m *mockUsersRepository) GetByRefreshToken(ctx context.Context, refreshToken string) (*domain.User, error) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
 	for _, u := range m.usersStorage {
 		if u.RefreshToken.Token == refreshToken && time.Now().Before(u.RefreshToken.ExpiresAt) {
 			copyUser := *u
