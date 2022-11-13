@@ -7,13 +7,14 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.4.0
+	github.com/mitchellh/mapstructure v1.5.0
 	github.com/minio/minio-go/v7 v7.0.43
 	github.com/rs/cors v1.8.2
 	github.com/sirupsen/logrus v1.9.0
-	github.com/xuri/excelize/v2 v2.6.1
 	github.com/spf13/cobra v1.6.1
 	github.com/swaggo/http-swagger v1.3.3
 	github.com/swaggo/swag v1.8.7
+	github.com/xuri/excelize/v2 v2.6.1
 	go.mongodb.org/mongo-driver v1.10.3
 	go.uber.org/zap v1.23.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -46,6 +47,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.3 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.1 // indirect
