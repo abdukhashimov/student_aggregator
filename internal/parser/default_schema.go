@@ -7,6 +7,6 @@ var defaultSchema = Schema{
 	Fields: []FieldSchema{
 		{Name: "first_name", Col: "A"},
 		{Name: "last_name", Col: "B"},
-		{Name: "name", Col: "C"},
+		{Name: "email", Col: "C"},
 	},
 }

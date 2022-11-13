@@ -3,13 +3,11 @@ package parser
 import (
 	"bytes"
 	"encoding/csv"
-	"errors"
 	"fmt"
+	"github.com/mitchellh/mapstructure"
 	"github.com/xuri/excelize/v2"
-	"reflect"
+	"io"
 )
-
-const SchemaTagName = "schema"
 
 type FieldSchema struct {
 	Col  string `json:"col"`
@@ -23,15 +21,15 @@ type Schema struct {
 	Fields     []FieldSchema `json:"fields"`
 }
 
-// ParseCSVFile maps csv file data b to l struct pointer according to s schema.
+// ParseCSVFile maps csv file data b to in struct pointer according to s schema.
 // Returns an error.
-func ParseCSVFile(l *[]interface{}, b *[]byte, s Schema) error {
-	fb, err := csvToXlsx(b)
+func ParseCSVFile[T any](in *[]T, r io.Reader, s Schema) error {
+	fb, err := csvToXlsx(r)
 	if err != nil {
 		return err
 	}
 
-	err = ParseXLSXFile(l, fb, s)
+	err = ParseXLSXFile[T](in, fb, s)
 	if err != nil {
 		return err
 	}
@@ -41,9 +39,8 @@ func ParseCSVFile(l *[]interface{}, b *[]byte, s Schema) error {
 
 // csvToXlsx converts csv file data to xslx file byte slice
 // Returns byte slice pointer and error.
-func csvToXlsx(data *[]byte) (*[]byte, error) {
-	reader := bytes.NewReader(*data)
-	csvReader := csv.NewReader(reader)
+func csvToXlsx(r io.Reader) (io.Reader, error) {
+	csvReader := csv.NewReader(r)
 	f := excelize.NewFile()
 	f.NewSheet("default")
 	worksheet, err := csvReader.ReadAll()
@@ -59,19 +56,18 @@ func csvToXlsx(data *[]byte) (*[]byte, error) {
 		}
 	}
 
-	buffer, err := f.WriteToBuffer()
+	buf, err := f.WriteToBuffer()
 	if err != nil {
 		return nil, err
 	}
-	b := buffer.Bytes()
-	return &b, nil
+
+	return bytes.NewReader(buf.Bytes()), nil
 }
 
-// ParseXLSXFile ParseXlsxFile maps xlsx file data b to l struct pointer according to s schema.
+// ParseXLSXFile Reads file Reader r, maps file data to T type according to s schema and append it to slice in.
 // Returns an error.
-func ParseXLSXFile(l *[]interface{}, b *[]byte, s Schema) error {
-	s = defaultSchema
-	f, err := readFileFromBuffer(b)
+func ParseXLSXFile[T any](in *[]T, r io.Reader, s Schema) error {
+	f, err := excelize.OpenReader(r)
 	if err != nil {
 		return err
 	}
@@ -82,9 +78,9 @@ func ParseXLSXFile(l *[]interface{}, b *[]byte, s Schema) error {
 	}
 
 	for _, fileItem := range dataMapList {
-		s := struct{}{}
-		err := mapStruct(&s, fileItem)
-		*l = append(*l, s)
+		var item T
+		err := mapstructure.WeakDecode(fileItem, &item)
+		*in = append(*in, item)
 		if err != nil {
 			return err
 		}
@@ -137,53 +133,4 @@ func mapRow(index int, sheetName string, f *excelize.File, s Schema) (map[string
 		fim[fs.Name] = value
 	}
 	return fim, nil
-}
-
-// readFileFromBuffer reads bytes slice b to excelize.File
-// Returns excelize.File and an error.
-func readFileFromBuffer(b *[]byte) (*excelize.File, error) {
-	reader := bytes.NewReader(*b)
-	f, err := excelize.OpenReader(reader)
-	if err != nil {
-		return f, err
-	}
-	return f, nil
-}
-
-// mapStruct maps valueMap to s struct pointer according to struct field tags.
-// Returns an error.
-func mapStruct(s any, valueMap map[string]string) error {
-	t := reflect.ValueOf(s).Elem()
-	typeOfT := t.Type()
-	for i := 0; i < t.NumField(); i++ {
-		typeField := typeOfT.Field(i)
-		tag := typeField.Tag.Get(SchemaTagName)
-		err := setField(t.FieldByName(typeField.Name), valueMap[tag])
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// setField sets field value.
-// Returns an error.
-func setField(field reflect.Value, value any) error {
-	if !field.IsValid() {
-		return fmt.Errorf("No such field: %s in obj", field)
-	}
-
-	if !field.CanSet() {
-		return fmt.Errorf("Cannot set %s field value", field)
-	}
-
-	structFieldType := field.Type()
-	val := reflect.ValueOf(value)
-
-	if structFieldType != val.Type() {
-		return errors.New("Provided value type didn't match obj field type")
-	}
-
-	field.Set(val)
-	return nil
 }
