@@ -33,7 +33,7 @@ func (s *Server) loginUser() http.HandlerFunc {
 		userId, err := s.userService.SignIn(r.Context(), input)
 
 		if err != nil {
-			if err == domain.ErrUserNotFound {
+			if err == domain.ErrNotFound {
 				sendUnauthorizedError(w, input.Email)
 				return
 			}
@@ -135,7 +135,7 @@ func (s *Server) refreshToken() http.HandlerFunc {
 
 		user, err := s.userService.UserByRefreshToken(r.Context(), input.Token)
 		if err != nil {
-			if err == domain.ErrUserNotFound {
+			if err == domain.ErrNotFound {
 				sendInvalidRefreshTokenError(w)
 				return
 			}

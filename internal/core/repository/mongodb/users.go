@@ -49,7 +49,7 @@ func (ur *UsersRepo) GetByCredentials(ctx context.Context, email, password strin
 	user := &domain.User{}
 	if err := ur.db.FindOne(ctx, bson.M{"email": email, "password": password}).Decode(user); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return nil, domain.ErrUserNotFound
+			return nil, domain.ErrNotFound
 		}
 
 		return nil, err
@@ -65,7 +65,7 @@ func (ur *UsersRepo) GetByRefreshToken(ctx context.Context, refreshToken string)
 		"refresh_token.expires_at": bson.M{"$gt": time.Now()},
 	}).Decode(user); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return nil, domain.ErrUserNotFound
+			return nil, domain.ErrNotFound
 		}
 
 		return nil, err
@@ -84,7 +84,7 @@ func (ur *UsersRepo) GetById(ctx context.Context, id string) (*domain.User, erro
 		"_id": objectId,
 	}).Decode(&user); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return nil, domain.ErrUserNotFound
+			return nil, domain.ErrNotFound
 		}
 
 		return nil, err

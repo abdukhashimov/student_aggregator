@@ -128,7 +128,7 @@ func (m *mockUsersService) SignIn(ctx context.Context, input domain.SignInUserIn
 		}
 	}
 
-	return "", domain.ErrUserNotFound
+	return "", domain.ErrNotFound
 }
 
 func (m *mockUsersService) SetRefreshToken(ctx context.Context, id string, token string) error {
@@ -153,7 +153,7 @@ func (m *mockUsersService) UserById(ctx context.Context, id string) (*domain.Use
 		}
 	}
 
-	return nil, domain.ErrUserNotFound
+	return nil, domain.ErrNotFound
 }
 
 func (m *mockUsersService) GenerateUserTokens(ctx context.Context, id string) (*domain.Tokens, error) {
@@ -175,7 +175,7 @@ func (m *mockUsersService) GenerateUserTokens(ctx context.Context, id string) (*
 		}
 	}
 
-	return nil, domain.ErrUserNotFound
+	return nil, domain.ErrNotFound
 }
 
 func (m *mockUsersService) UserByAccessToken(ctx context.Context, token string) (*domain.User, error) {
@@ -188,7 +188,7 @@ func (m *mockUsersService) UserByAccessToken(ctx context.Context, token string) 
 
 	user, ok := m.usersStorage[token]
 	if !ok {
-		return nil, domain.ErrUserNotFound
+		return nil, domain.ErrNotFound
 	}
 
 	return user, nil
@@ -209,7 +209,7 @@ func (m *mockUsersService) UserByRefreshToken(ctx context.Context, token string)
 		}
 	}
 
-	return nil, domain.ErrUserNotFound
+	return nil, domain.ErrNotFound
 }
 
 func (m *mockUsersService) incrementId() {

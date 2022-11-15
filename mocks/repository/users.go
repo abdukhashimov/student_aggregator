@@ -96,7 +96,7 @@ func (m *mockUsersRepository) Update(ctx context.Context, id string, inp domain.
 
 	user, ok := m.usersStorage[id]
 	if !ok {
-		return domain.ErrUserNotFound
+		return domain.ErrNotFound
 	}
 
 	if inp.Email != nil {
@@ -152,7 +152,7 @@ func (m *mockUsersRepository) GetById(ctx context.Context, id string) (*domain.U
 
 	user, ok := m.usersStorage[id]
 	if !ok {
-		return nil, domain.ErrUserNotFound
+		return nil, domain.ErrNotFound
 	}
 	copyUser := *user
 
@@ -168,7 +168,7 @@ func (m *mockUsersRepository) StoreRefreshToken(ctx context.Context, id string, 
 
 	user, ok := m.usersStorage[id]
 	if !ok {
-		return domain.ErrUserNotFound
+		return domain.ErrNotFound
 	}
 	user.RefreshToken = token
 

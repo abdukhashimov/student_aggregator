@@ -82,7 +82,7 @@ var GetUserResponses = []struct {
 
 			return []bson.D{res, end}, nil
 		},
-		expectedErr: domain.ErrUserNotFound,
+		expectedErr: domain.ErrNotFound,
 	},
 }
 
