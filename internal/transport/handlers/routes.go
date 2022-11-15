@@ -5,27 +5,22 @@ import (
 	"net/http"
 )
 
-const (
-	MethodGet  = "GET"
-	MethodPost = "POST"
-)
-
 func (s *Server) routes() {
 	s.router.Use(cors.AllowAll().Handler)
 	apiRouter := s.router.PathPrefix("/api/v1").Subrouter()
 
 	noAuth := apiRouter.PathPrefix("").Subrouter()
 	{
-		noAuth.Handle("/health", healthCheck()).Methods(MethodGet)
-		noAuth.Handle("/users/login", s.loginUser()).Methods(MethodPost)
-		noAuth.Handle("/users", s.createUser()).Methods(MethodPost)
-		noAuth.Handle("/auth/refresh", s.refreshToken()).Methods(MethodPost)
+		noAuth.Handle("/health", healthCheck()).Methods(http.MethodGet)
+		noAuth.Handle("/users/login", s.loginUser()).Methods(http.MethodPost)
+		noAuth.Handle("/users", s.createUser()).Methods(http.MethodPost)
+		noAuth.Handle("/auth/refresh", s.refreshToken()).Methods(http.MethodPost)
 	}
 
 	authApiRoutes := apiRouter.PathPrefix("").Subrouter()
 	authApiRoutes.Use(s.authenticate)
 	{
-		authApiRoutes.Handle("/user", s.getCurrentUser()).Methods(MethodGet)
+		authApiRoutes.Handle("/user", s.getCurrentUser()).Methods(http.MethodGet)
 	}
 }
 
