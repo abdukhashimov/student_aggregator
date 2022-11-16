@@ -1,5 +1,46 @@
 basePath: /api/v1
 definitions:
+  domain.FieldSchema:
+    properties:
+      col:
+        type: string
+      name:
+        type: string
+    type: object
+  domain.NewSchemaInput:
+    properties:
+      fields:
+        items:
+          $ref: '#/definitions/domain.FieldSchema'
+        type: array
+      headers:
+        type: boolean
+      name:
+        type: string
+      schema_type:
+        type: string
+      version:
+        type: string
+    type: object
+  domain.Schema:
+    properties:
+      fields:
+        items:
+          $ref: '#/definitions/domain.FieldSchema'
+        type: array
+      headers:
+        type: boolean
+      id:
+        type: string
+      name:
+        type: string
+      schema_type:
+        type: string
+      slug:
+        type: string
+      version:
+        type: string
+    type: object
   domain.SignInUserInput:
     properties:
       email:
@@ -28,6 +69,23 @@ definitions:
       refresh_token:
         type: string
     type: object
+  domain.UpdateSchemaInput:
+    properties:
+      fields:
+        items:
+          $ref: '#/definitions/domain.FieldSchema'
+        type: array
+      headers:
+        type: boolean
+      name:
+        type: string
+      schema_type:
+        type: string
+      slug:
+        type: string
+      version:
+        type: string
+    type: object
   domain.UserProfile:
     properties:
       email:
@@ -36,6 +94,18 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  handlers.SchemaResponse:
+    properties:
+      schema:
+        $ref: '#/definitions/domain.Schema'
+    type: object
+  handlers.SchemasResponse:
+    properties:
+      schemas:
+        items:
+          $ref: '#/definitions/domain.Schema'
+        type: array
     type: object
   handlers.UserProfileResponse:
     properties:
@@ -86,6 +156,124 @@ paths:
       summary: Health Check
       tags:
       - health
+  /schemas:
+    get:
+      consumes:
+      - application/json
+      description: retrieves all schemas
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SchemasResponse'
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
+      summary: List Schemas
+      tags:
+      - schema
+    post:
+      consumes:
+      - application/json
+      description: schema creation process
+      parameters:
+      - description: query params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.NewSchemaInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+      summary: Create Schema
+      tags:
+      - schema
+  /schemas/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete schema
+      parameters:
+      - description: schema id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Delete Schema
+      tags:
+      - schema
+    get:
+      consumes:
+      - application/json
+      description: get course by id
+      parameters:
+      - description: schema id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SchemaResponse'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get Schema By ID
+      tags:
+      - schema
+    patch:
+      consumes:
+      - application/json
+      description: update schema by id
+      parameters:
+      - description: update info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateSchemaInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SchemaResponse'
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+      summary: Update Schema By ID
+      tags:
+      - schema
   /user:
     get:
       consumes:
