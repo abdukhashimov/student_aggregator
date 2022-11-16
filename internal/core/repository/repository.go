@@ -5,5 +5,6 @@ import (
 )
 
 type Repositories struct {
-	Users ports.UsersStore
+	Users   ports.UsersStore
+	Schemas ports.SchemaStore
 }

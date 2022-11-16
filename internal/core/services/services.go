@@ -8,15 +8,18 @@ import (
 
 type Services struct {
 	Users   ports.UsersService
+	Schemas ports.SchemaService
 	Storage ports.StorageService
 }
 
 func NewServices(repos *repository.Repositories, cfg *config.Config) *Services {
 	usersService := NewUsersService(repos.Users, cfg)
+	schemasService := NewSchemaService(repos.Schemas, cfg)
 	storageService := NewStorageService(cfg)
 
 	return &Services{
 		Users:   usersService,
+		Schemas: schemasService,
 		Storage: storageService,
 	}
 }

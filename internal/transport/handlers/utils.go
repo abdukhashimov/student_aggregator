@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -61,6 +62,14 @@ func sendInvalidRefreshTokenError(w http.ResponseWriter) {
 	msg := "invalid or missing refresh token"
 	logger.Log.Info(msg)
 	writeErrorResponse(w, http.StatusUnauthorized, msg)
+}
+
+func sendNotFoundError(w http.ResponseWriter) {
+	writeErrorResponse(w, http.StatusNotFound, "resource not found")
+}
+
+func sendDuplicatedError(w http.ResponseWriter, field string) {
+	writeErrorResponse(w, http.StatusUnprocessableEntity, M{"errors": fmt.Sprintf("the field <%s> is taken", field)})
 }
 
 func writeErrorResponse(w http.ResponseWriter, code int, errs interface{}) {

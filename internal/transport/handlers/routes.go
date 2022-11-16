@@ -21,6 +21,11 @@ func (s *Server) routes() {
 	authApiRoutes.Use(s.authenticate)
 	{
 		authApiRoutes.Handle("/user", s.getCurrentUser()).Methods(http.MethodGet)
+		authApiRoutes.Handle("/schemas", s.createSchema()).Methods(http.MethodPost)
+		authApiRoutes.Handle("/schemas", s.listSchemas()).Methods(http.MethodGet)
+		authApiRoutes.Handle("/schemas/{id}", s.getSchemaById()).Methods(http.MethodGet)
+		authApiRoutes.Handle("/schemas/{id}", s.updateSchema()).Methods(http.MethodPatch)
+		authApiRoutes.Handle("/schemas/{id}", s.deleteSchema()).Methods(http.MethodDelete)
 	}
 }
 

@@ -3,7 +3,6 @@ package mongodb
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -35,9 +34,11 @@ func (ur *UsersRepo) Create(ctx context.Context, user domain.User) (string, erro
 		return "", err
 	}
 
-	logger.Log.Debugf("Created user with %s", res.InsertedID)
+	stringId := getIdFromObjectID(res.InsertedID)
 
-	return fmt.Sprintf("%s", res.InsertedID), nil
+	logger.Log.Debugf("Created user with %s", stringId)
+
+	return stringId, nil
 }
 
 func (ur *UsersRepo) Update(ctx context.Context, id string, inp domain.UpdateUserInput) error {

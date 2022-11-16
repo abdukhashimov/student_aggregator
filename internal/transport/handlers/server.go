@@ -25,6 +25,7 @@ type Server struct {
 	server         *http.Server
 	router         *mux.Router
 	userService    ports.UsersService
+	schemasService ports.SchemaService
 	storageService ports.StorageService
 	config         *config.Config
 }
@@ -45,6 +46,7 @@ func NewServer(db *mongo.Database, storageClient *minio.Client, cfg *config.Conf
 
 	servs := services.NewServices(repos, cfg)
 	s.userService = servs.Users
+	s.schemasService = servs.Schemas
 
 	s.storageService = &services.StorageService{}
 	s.storageService.SetClient(storageClient)
