@@ -24,10 +24,10 @@ type NewSchemaInput struct {
 }
 
 type UpdateSchemaInput struct {
-	Name       *string        `json:"name"`
-	Slug       *string        `json:"slug"`
-	Version    *string        `json:"version"`
-	SchemaType *string        `json:"schema_type"`
-	Headers    *bool          `json:"headers"`
-	Fields     *[]FieldSchema `json:"fields"`
+	Name       *string        `json:"name" bson:"name,omitempty"`
+	Slug       *string        `json:"slug" bson:"slug,omitempty"`
+	Version    *string        `json:"version" bson:"version,omitempty"`
+	SchemaType *string        `json:"schema_type" bson:"schema_type,omitempty"`
+	Headers    *bool          `json:"headers" bson:"headers,omitempty"`
+	Fields     *[]FieldSchema `json:"fields" bson:"fields,omitempty"`
 }

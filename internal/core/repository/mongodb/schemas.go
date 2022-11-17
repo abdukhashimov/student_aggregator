@@ -68,34 +68,8 @@ func (sr *SchemaRepo) Update(ctx context.Context, id string, input domain.Update
 		return err
 	}
 
-	updateQuery := bson.M{}
-
-	if input.Name != nil {
-		updateQuery["name"] = *input.Name
-	}
-
-	if input.Slug != nil {
-		updateQuery["slug"] = *input.Slug
-	}
-
-	if input.Version != nil {
-		updateQuery["version"] = *input.Version
-	}
-
-	if input.SchemaType != nil {
-		updateQuery["schema_type"] = *input.SchemaType
-	}
-
-	if input.Headers != nil {
-		updateQuery["headers"] = *input.Headers
-	}
-
-	if input.Fields != nil {
-		updateQuery["fields"] = *input.Fields
-	}
-
 	_, err = sr.db.UpdateOne(ctx,
-		bson.M{"_id": objectId}, bson.M{"$set": updateQuery})
+		bson.M{"_id": objectId}, bson.M{"$set": input})
 
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
