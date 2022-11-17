@@ -36,8 +36,6 @@ definitions:
         type: string
       schema_type:
         type: string
-      slug:
-        type: string
       version:
         type: string
     type: object
@@ -80,8 +78,6 @@ definitions:
       name:
         type: string
       schema_type:
-        type: string
-      slug:
         type: string
       version:
         type: string

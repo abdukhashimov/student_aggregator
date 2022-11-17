@@ -3,7 +3,7 @@ package domain
 type Schema struct {
 	ID         string        `json:"id" bson:"_id,omitempty"`
 	Name       string        `json:"name" bson:"name"`
-	Slug       string        `json:"slug" bson:"slug"`
+	Slug       string        `json:"-" bson:"slug"`
 	Version    string        `json:"version" bson:"version"`
 	SchemaType string        `json:"schema_type" bson:"schema_type"`
 	Headers    bool          `json:"headers" bson:"headers"`
@@ -25,7 +25,7 @@ type NewSchemaInput struct {
 
 type UpdateSchemaInput struct {
 	Name       *string        `json:"name" bson:"name,omitempty"`
-	Slug       *string        `json:"slug" bson:"slug,omitempty"`
+	Slug       *string        `json:"-" bson:"slug,omitempty"`
 	Version    *string        `json:"version" bson:"version,omitempty"`
 	SchemaType *string        `json:"schema_type" bson:"schema_type,omitempty"`
 	Headers    *bool          `json:"headers" bson:"headers,omitempty"`

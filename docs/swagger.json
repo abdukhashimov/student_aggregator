@@ -416,9 +416,6 @@
                 "schema_type": {
                     "type": "string"
                 },
-                "slug": {
-                    "type": "string"
-                },
                 "version": {
                     "type": "string"
                 }
@@ -484,9 +481,6 @@
                     "type": "string"
                 },
                 "schema_type": {
-                    "type": "string"
-                },
-                "slug": {
                     "type": "string"
                 },
                 "version": {

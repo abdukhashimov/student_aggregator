@@ -425,9 +425,6 @@ const docTemplate = `{
                 "schema_type": {
                     "type": "string"
                 },
-                "slug": {
-                    "type": "string"
-                },
                 "version": {
                     "type": "string"
                 }
@@ -493,9 +490,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "schema_type": {
-                    "type": "string"
-                },
-                "slug": {
                     "type": "string"
                 },
                 "version": {
