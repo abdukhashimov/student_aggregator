@@ -14,6 +14,10 @@ import (
 	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
 )
 
+const (
+	usersCollection = "users"
+)
+
 var _ ports.UsersStore = (*UsersRepo)(nil)
 
 type UsersRepo struct {

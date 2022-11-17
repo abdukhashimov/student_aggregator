@@ -12,6 +12,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+const (
+	schemasCollection = "schemas"
+)
+
 var _ ports.SchemaStore = (*SchemaRepo)(nil)
 
 type SchemaRepo struct {

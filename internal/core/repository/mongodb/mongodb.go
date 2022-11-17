@@ -8,11 +8,6 @@ import (
 	"github.com/abdukhashimov/student_aggregator/internal/core/repository"
 )
 
-const (
-	usersCollection   = "users"
-	schemasCollection = "schemas"
-)
-
 func NewRepositories(db *mongo.Database) *repository.Repositories {
 	return &repository.Repositories{
 		Users:   NewUsersRepo(db),
