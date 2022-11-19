@@ -16,24 +16,29 @@ func readJSON(body io.Reader, input interface{}) error {
 }
 
 func writeJSON(w http.ResponseWriter, code int, data interface{}) {
-	jsonBytes, err := json.Marshal(data)
-
-	if err != nil {
-		sendServerError(w, err)
-		return
+	var jsonBytes []byte
+	if data != nil {
+		jB, err := json.Marshal(data)
+		if err != nil {
+			sendServerError(w, err)
+			return
+		}
+		jsonBytes = jB
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-	_, err = w.Write(jsonBytes)
+	if len(jsonBytes) > 0 {
+		_, err := w.Write(jsonBytes)
 
-	if err != nil {
-		logger.Log.Error(err)
+		if err != nil {
+			logger.Log.Error(err)
+		}
 	}
 }
 
 func sendCode(w http.ResponseWriter, code int) {
-	writeJSON(w, code, M{})
+	writeJSON(w, code, nil)
 }
 
 func sendServerError(w http.ResponseWriter, err error) {

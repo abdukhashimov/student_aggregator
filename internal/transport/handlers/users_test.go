@@ -57,7 +57,7 @@ var CreateUserTestCases = []struct {
 		username:     "user name",
 		email:        "newemail@ts.ts",
 		password:     "123456",
-		expectedBody: "{}",
+		expectedBody: "",
 		expectedCode: http.StatusCreated,
 	},
 	{
