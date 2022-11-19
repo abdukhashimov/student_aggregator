@@ -11,7 +11,7 @@ import (
 	"github.com/abdukhashimov/student_aggregator/internal/config"
 	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
 	"github.com/abdukhashimov/student_aggregator/mocks"
-	"github.com/abdukhashimov/student_aggregator/mocks/repository"
+	"github.com/abdukhashimov/student_aggregator/mocks/repository/users"
 )
 
 const (
@@ -48,8 +48,8 @@ var SignUpTestCases = []struct {
 
 		return nil
 	}},
-	{name: "duplicate", testEmail: repository.TakenUserEmail, testPassword: testPassword, expectedError: true},
-	{name: "failure", testEmail: repository.ErrorToCreateUserEmail, testPassword: testPassword, expectedError: true},
+	{name: "duplicate", testEmail: users.TakenUserEmail, testPassword: testPassword, expectedError: true},
+	{name: "failure", testEmail: users.ErrorToCreateUserEmail, testPassword: testPassword, expectedError: true},
 }
 
 var SignInTestCases = []struct {
@@ -106,9 +106,9 @@ var UserByAccessTokenTestCases = []struct {
 	expectedError bool
 	corrupted     bool
 }{
-	{name: "success", userId: repository.ValidMongoId, ttl: 1 * time.Minute, expectedError: false},
-	{name: "corrupted", userId: repository.ValidMongoId, ttl: 1 * time.Minute, expectedError: true, corrupted: true},
-	{name: "expired", userId: repository.ValidMongoId, ttl: -1 * time.Minute, expectedError: true},
+	{name: "success", userId: users.ValidMongoId, ttl: 1 * time.Minute, expectedError: false},
+	{name: "corrupted", userId: users.ValidMongoId, ttl: 1 * time.Minute, expectedError: true, corrupted: true},
+	{name: "expired", userId: users.ValidMongoId, ttl: -1 * time.Minute, expectedError: true},
 	{name: "failure", userId: "1", ttl: 1 * time.Minute, expectedError: true},
 }
 
@@ -118,9 +118,9 @@ var UserByRefreshTokenTestCases = []struct {
 	expectedId    string
 	expectedError bool
 }{
-	{name: "success", token: repository.ValidRefreshToken, expectedId: repository.ValidMongoId, expectedError: false},
-	{name: "expired", token: repository.ExpiredRefreshToken, expectedError: true},
-	{name: "notfound", token: repository.MissedRefreshToken, expectedError: true},
+	{name: "success", token: users.ValidRefreshToken, expectedId: users.ValidMongoId, expectedError: false},
+	{name: "expired", token: users.ExpiredRefreshToken, expectedError: true},
+	{name: "notfound", token: users.MissedRefreshToken, expectedError: true},
 }
 
 var GeneralTestCases = []struct {
@@ -128,9 +128,9 @@ var GeneralTestCases = []struct {
 	userId        string
 	expectedError bool
 }{
-	{name: "success", userId: repository.ValidMongoId, expectedError: false},
-	{name: "failure", userId: repository.InvalidMongoId, expectedError: true},
-	{name: "notfound", userId: repository.NotFoundMongoId, expectedError: true},
+	{name: "success", userId: users.ValidMongoId, expectedError: false},
+	{name: "failure", userId: users.InvalidMongoId, expectedError: true},
+	{name: "notfound", userId: users.NotFoundMongoId, expectedError: true},
 }
 
 func TestMain(m *testing.M) {
@@ -157,7 +157,7 @@ func teardown() {
 func TestSignUp(t *testing.T) {
 	for _, tc := range SignUpTestCases {
 		t.Run(tc.name, func(t *testing.T) {
-			userRepository := repository.NewMockUsersRepository()
+			userRepository := users.NewMockUsersRepository()
 			us := NewUsersService(userRepository, testConfig)
 
 			id, err := us.SignUp(context.Background(), domain.SignUpUserInput{
@@ -193,7 +193,7 @@ func TestSignUp(t *testing.T) {
 func TestSignIn(t *testing.T) {
 	for _, tc := range SignInTestCases {
 		t.Run(tc.name, func(t *testing.T) {
-			userRepository := repository.NewMockUsersRepository()
+			userRepository := users.NewMockUsersRepository()
 			us := NewUsersService(userRepository, testConfig)
 
 			newUserId, err := us.SignUp(context.Background(), domain.SignUpUserInput{
@@ -234,7 +234,7 @@ func TestSignIn(t *testing.T) {
 func TestUserByAccessToken(t *testing.T) {
 	for _, tc := range UserByAccessTokenTestCases {
 		t.Run(tc.name, func(t *testing.T) {
-			userRepository := repository.NewMockUsersRepository()
+			userRepository := users.NewMockUsersRepository()
 			us := NewUsersService(userRepository, testConfig)
 			accessToken, _ := us.tokeManager.NewJWT(tc.userId, tc.ttl)
 
@@ -267,7 +267,7 @@ func TestUserByAccessToken(t *testing.T) {
 func TestUserByRefreshToken(t *testing.T) {
 	for _, tc := range UserByRefreshTokenTestCases {
 		t.Run(tc.name, func(t *testing.T) {
-			userRepository := repository.NewMockUsersRepository()
+			userRepository := users.NewMockUsersRepository()
 			us := NewUsersService(userRepository, testConfig)
 
 			user, err := us.UserByRefreshToken(context.Background(), tc.token)
@@ -295,7 +295,7 @@ func TestUserByRefreshToken(t *testing.T) {
 func TestUserById(t *testing.T) {
 	for _, tc := range GeneralTestCases {
 		t.Run(tc.name, func(t *testing.T) {
-			userRepository := repository.NewMockUsersRepository()
+			userRepository := users.NewMockUsersRepository()
 			us := NewUsersService(userRepository, testConfig)
 
 			user, err := us.UserById(context.Background(), tc.userId)
@@ -324,7 +324,7 @@ func TestGenerateUserTokens(t *testing.T) {
 	for _, tc := range GeneralTestCases {
 		t.Run(tc.name, func(t *testing.T) {
 			now := time.Now()
-			userRepository := repository.NewMockUsersRepository()
+			userRepository := users.NewMockUsersRepository()
 			us := NewUsersService(userRepository, testConfig)
 
 			tokens, err := us.GenerateUserTokens(context.Background(), tc.userId)
@@ -378,7 +378,7 @@ func TestSetRefreshToken(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			now := time.Now()
 			newRefreshToken := "newRandomToken"
-			userRepository := repository.NewMockUsersRepository()
+			userRepository := users.NewMockUsersRepository()
 			us := NewUsersService(userRepository, testConfig)
 
 			err := us.SetRefreshToken(context.Background(), tc.userId, newRefreshToken)

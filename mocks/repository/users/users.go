@@ -1,10 +1,9 @@
-package repository
+package users
 
 import (
 	"context"
 	"errors"
-	"fmt"
-	"strconv"
+	"github.com/abdukhashimov/student_aggregator/mocks/repository"
 	"sync"
 	"time"
 
@@ -77,7 +76,7 @@ func (m *mockUsersRepository) Create(ctx context.Context, user domain.User) (str
 		}
 	}
 
-	newId := incrementId(m.lastId)
+	newId := repository.IncrementId(m.lastId)
 	m.lastId = newId
 	m.usersStorage[newId] = &domain.User{
 		ID:           newId,
@@ -173,11 +172,4 @@ func (m *mockUsersRepository) StoreRefreshToken(ctx context.Context, id string, 
 	user.RefreshToken = token
 
 	return nil
-}
-
-func incrementId(in string) string {
-	value, _ := strconv.ParseInt(in[15:], 16, 64)
-	value += 1
-
-	return fmt.Sprintf("%s%09x", in[:15], value)
 }
