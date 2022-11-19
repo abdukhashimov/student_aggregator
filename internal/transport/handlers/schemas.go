@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"errors"
-	"github.com/gorilla/mux"
 	"net/http"
 
 	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
+	"github.com/gorilla/mux"
 )
 
 type SchemaResponse struct {
@@ -33,7 +33,7 @@ func (s *Server) listSchemas() http.HandlerFunc {
 			return
 		}
 
-		writeJSON(w, http.StatusCreated, SchemasResponse{
+		writeJSON(w, http.StatusOK, SchemasResponse{
 			Schemas: schemas,
 		})
 	}
@@ -106,7 +106,7 @@ func (s *Server) getSchemaById() http.HandlerFunc {
 			return
 		}
 
-		writeJSON(w, http.StatusCreated, SchemaResponse{
+		writeJSON(w, http.StatusOK, SchemaResponse{
 			Schema: *schema,
 		})
 	}
@@ -153,7 +153,7 @@ func (s *Server) updateSchema() http.HandlerFunc {
 			return
 		}
 
-		writeJSON(w, http.StatusCreated, SchemaResponse{
+		writeJSON(w, http.StatusOK, SchemaResponse{
 			Schema: *schema,
 		})
 	}

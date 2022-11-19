@@ -74,7 +74,7 @@ func sendNotFoundError(w http.ResponseWriter) {
 }
 
 func sendDuplicatedError(w http.ResponseWriter, field string) {
-	writeErrorResponse(w, http.StatusUnprocessableEntity, M{"errors": fmt.Sprintf("the field <%s> is taken", field)})
+	writeErrorResponse(w, http.StatusUnprocessableEntity, fmt.Sprintf("the field [%s] is taken", field))
 }
 
 func writeErrorResponse(w http.ResponseWriter, code int, errs interface{}) {
