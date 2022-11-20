@@ -3,15 +3,13 @@ package schemas
 import (
 	"context"
 	"errors"
-	"regexp"
 	"sort"
 	"strconv"
-	"strings"
 	"sync"
 
 	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
 	"github.com/abdukhashimov/student_aggregator/internal/core/ports"
-	"github.com/abdukhashimov/student_aggregator/mocks/services"
+	"github.com/abdukhashimov/student_aggregator/mocks/utils"
 )
 
 const (
@@ -60,8 +58,8 @@ type mockSchemasService struct {
 func NewMockSchemasService() *mockSchemasService {
 	return &mockSchemasService{
 		schemasStorage: map[string]*domain.Schema{
-			ValidSchemaID1: copySchema(&EtalonSchema1),
-			ValidSchemaID2: copySchema(&EtalonSchema2),
+			ValidSchemaID1: utils.CopySchema(&EtalonSchema1),
+			ValidSchemaID2: utils.CopySchema(&EtalonSchema2),
 		},
 		lastSchemaId: ValidSchemaID2,
 		mutex:        &sync.RWMutex{},
@@ -69,14 +67,14 @@ func NewMockSchemasService() *mockSchemasService {
 }
 
 func (m *mockSchemasService) NewSchema(ctx context.Context, input domain.NewSchemaInput) (*domain.Schema, error) {
-	if services.WithError(ctx) {
+	if utils.WithError(ctx) {
 		return nil, InternalError
 	}
 
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	slug := getSlug(input.Name)
+	slug := utils.GetSlug(input.Name)
 	if m.isDuplicate(slug, "") {
 		return nil, domain.DuplicationError
 	}
@@ -92,13 +90,13 @@ func (m *mockSchemasService) NewSchema(ctx context.Context, input domain.NewSche
 		Fields:     input.Fields,
 	}
 
-	schemaCopy := copySchema(m.schemasStorage[m.lastSchemaId])
+	schemaCopy := utils.CopySchema(m.schemasStorage[m.lastSchemaId])
 
 	return schemaCopy, nil
 }
 
 func (m *mockSchemasService) ListSchemas(ctx context.Context) ([]domain.Schema, error) {
-	if services.WithError(ctx) {
+	if utils.WithError(ctx) {
 		return nil, InternalError
 	}
 
@@ -107,7 +105,7 @@ func (m *mockSchemasService) ListSchemas(ctx context.Context) ([]domain.Schema, 
 
 	var result []domain.Schema
 	for _, v := range m.schemasStorage {
-		schemaCopy := copySchema(v)
+		schemaCopy := utils.CopySchema(v)
 		result = append(result, *schemaCopy)
 	}
 
@@ -118,7 +116,7 @@ func (m *mockSchemasService) ListSchemas(ctx context.Context) ([]domain.Schema, 
 }
 
 func (m *mockSchemasService) GetSchemaById(ctx context.Context, id string) (*domain.Schema, error) {
-	if services.WithError(ctx) {
+	if utils.WithError(ctx) {
 		return nil, InternalError
 	}
 
@@ -130,13 +128,13 @@ func (m *mockSchemasService) GetSchemaById(ctx context.Context, id string) (*dom
 		return nil, domain.ErrNotFound
 	}
 
-	schemaCopy := copySchema(schema)
+	schemaCopy := utils.CopySchema(schema)
 
 	return schemaCopy, nil
 }
 
 func (m *mockSchemasService) UpdateSchema(ctx context.Context, id string, input domain.UpdateSchemaInput) (*domain.Schema, error) {
-	if services.WithError(ctx) {
+	if utils.WithError(ctx) {
 		return nil, InternalError
 	}
 
@@ -149,7 +147,7 @@ func (m *mockSchemasService) UpdateSchema(ctx context.Context, id string, input 
 	}
 
 	if input.Name != nil {
-		slug := getSlug(*input.Name)
+		slug := utils.GetSlug(*input.Name)
 		if m.isDuplicate(slug, id) {
 			return nil, domain.DuplicationError
 		}
@@ -173,13 +171,13 @@ func (m *mockSchemasService) UpdateSchema(ctx context.Context, id string, input 
 		schema.Fields = *input.Fields
 	}
 
-	schemaCopy := copySchema(schema)
+	schemaCopy := utils.CopySchema(schema)
 
 	return schemaCopy, nil
 }
 
 func (m *mockSchemasService) DeleteSchema(ctx context.Context, id string) error {
-	if services.WithError(ctx) {
+	if utils.WithError(ctx) {
 		return InternalError
 	}
 
@@ -209,22 +207,4 @@ func (m *mockSchemasService) isDuplicate(slug string, id string) bool {
 	}
 
 	return false
-}
-
-func getSlug(in string) string {
-	space := regexp.MustCompile(`\s+`)
-	result := space.ReplaceAllString(in, " ")
-	result = strings.TrimSpace(result)
-	result = space.ReplaceAllString(result, "-")
-	result = strings.ToLower(result)
-
-	return result
-}
-
-func copySchema(schema *domain.Schema) *domain.Schema {
-	schemaCopy := *schema
-	schemaCopy.Fields = make([]domain.FieldSchema, len(schema.Fields))
-	copy(schemaCopy.Fields, schema.Fields)
-
-	return &schemaCopy
 }

@@ -3,7 +3,7 @@ package users
 import (
 	"context"
 	"errors"
-	"github.com/abdukhashimov/student_aggregator/mocks/repository"
+	"github.com/abdukhashimov/student_aggregator/mocks/utils"
 	"sync"
 	"time"
 
@@ -76,7 +76,7 @@ func (m *mockUsersRepository) Create(ctx context.Context, user domain.User) (str
 		}
 	}
 
-	newId := repository.IncrementId(m.lastId)
+	newId := utils.IncrementMongoId(m.lastId)
 	m.lastId = newId
 	m.usersStorage[newId] = &domain.User{
 		ID:           newId,

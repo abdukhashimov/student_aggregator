@@ -6,13 +6,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/abdukhashimov/student_aggregator/mocks/utils"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
-	"github.com/abdukhashimov/student_aggregator/mocks/services"
 	"github.com/abdukhashimov/student_aggregator/mocks/services/schemas"
 	"github.com/gorilla/mux"
 )
@@ -61,7 +61,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 			{
 				name: "internalError",
 				prepareRequest: func(r *http.Request) *http.Request {
-					return services.SetWithError(r, true)
+					return utils.SetWithError(r, true)
 				},
 				expectedBody: `{"errors":"internal error"}`,
 				expectedCode: http.StatusInternalServerError,
@@ -121,7 +121,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					},
 				},
 				prepareRequest: func(r *http.Request) *http.Request {
-					return services.SetWithError(r, true)
+					return utils.SetWithError(r, true)
 				},
 				expectedBody: `{"errors":"internal error"}`,
 				expectedCode: http.StatusInternalServerError,
@@ -163,7 +163,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					r = mux.SetURLVars(r, map[string]string{
 						"id": schemas.NotFoundSchemaID,
 					})
-					return services.SetWithError(r, true)
+					return utils.SetWithError(r, true)
 				},
 				expectedBody: `{"errors":"internal error"}`,
 				expectedCode: http.StatusInternalServerError,
@@ -300,7 +300,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					r = mux.SetURLVars(r, map[string]string{
 						"id": schemas.ValidSchemaID1,
 					})
-					return services.SetWithError(r, true)
+					return utils.SetWithError(r, true)
 				},
 				requestBody: domain.UpdateSchemaInput{
 					Name:       &updateSchemaName,
@@ -356,7 +356,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					r = mux.SetURLVars(r, map[string]string{
 						"id": schemas.ValidSchemaID1,
 					})
-					return services.SetWithError(r, true)
+					return utils.SetWithError(r, true)
 				},
 				expectedBody: `{"errors":"internal error"}`,
 				expectedCode: http.StatusInternalServerError,
