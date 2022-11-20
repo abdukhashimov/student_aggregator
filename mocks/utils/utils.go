@@ -27,10 +27,14 @@ func WithError(ctx context.Context) bool {
 	return withError
 }
 
-func SetWithError(r *http.Request, withError bool) *http.Request {
+func SetWithErrorToRequest(r *http.Request, withError bool) *http.Request {
 	ctx := context.WithValue(r.Context(), withErrorKey, withError)
 
 	return r.WithContext(ctx)
+}
+
+func SetWithErrorToContext(ctx context.Context, withError bool) context.Context {
+	return context.WithValue(ctx, withErrorKey, withError)
 }
 
 func CopySchema(schema *domain.Schema) *domain.Schema {

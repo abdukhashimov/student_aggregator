@@ -61,7 +61,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 			{
 				name: "internalError",
 				prepareRequest: func(r *http.Request) *http.Request {
-					return utils.SetWithError(r, true)
+					return utils.SetWithErrorToRequest(r, true)
 				},
 				expectedBody: `{"errors":"internal error"}`,
 				expectedCode: http.StatusInternalServerError,
@@ -121,7 +121,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					},
 				},
 				prepareRequest: func(r *http.Request) *http.Request {
-					return utils.SetWithError(r, true)
+					return utils.SetWithErrorToRequest(r, true)
 				},
 				expectedBody: `{"errors":"internal error"}`,
 				expectedCode: http.StatusInternalServerError,
@@ -163,7 +163,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					r = mux.SetURLVars(r, map[string]string{
 						"id": schemas.NotFoundSchemaID,
 					})
-					return utils.SetWithError(r, true)
+					return utils.SetWithErrorToRequest(r, true)
 				},
 				expectedBody: `{"errors":"internal error"}`,
 				expectedCode: http.StatusInternalServerError,
@@ -300,7 +300,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					r = mux.SetURLVars(r, map[string]string{
 						"id": schemas.ValidSchemaID1,
 					})
-					return utils.SetWithError(r, true)
+					return utils.SetWithErrorToRequest(r, true)
 				},
 				requestBody: domain.UpdateSchemaInput{
 					Name:       &updateSchemaName,
@@ -356,7 +356,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					r = mux.SetURLVars(r, map[string]string{
 						"id": schemas.ValidSchemaID1,
 					})
-					return utils.SetWithError(r, true)
+					return utils.SetWithErrorToRequest(r, true)
 				},
 				expectedBody: `{"errors":"internal error"}`,
 				expectedCode: http.StatusInternalServerError,

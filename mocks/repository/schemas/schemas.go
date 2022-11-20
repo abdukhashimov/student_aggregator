@@ -1,4 +1,4 @@
-package users
+package schemas
 
 import (
 	"context"
@@ -14,6 +14,7 @@ import (
 const (
 	ValidSchemaID1   = "507f1f77bcf86cd000000001"
 	ValidSchemaID2   = "507f1f77bcf86cd000000002"
+	NextSchemaID     = "507f1f77bcf86cd000000003"
 	NotFoundSchemaID = "507f1f77bcf86cd999999999"
 )
 
