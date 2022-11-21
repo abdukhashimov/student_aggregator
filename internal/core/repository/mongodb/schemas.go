@@ -28,9 +28,9 @@ func NewSchemaRepo(db *mongo.Database) *SchemaRepo {
 	}
 }
 
-func (sr *SchemaRepo) Create(ctx context.Context, user domain.Schema) (string, error) {
+func (sr *SchemaRepo) Create(ctx context.Context, schema domain.Schema) (string, error) {
 
-	res, err := sr.db.InsertOne(ctx, user)
+	res, err := sr.db.InsertOne(ctx, schema)
 
 	if err != nil {
 		if IsDuplicate(err) {
@@ -109,7 +109,7 @@ func (sr *SchemaRepo) Delete(ctx context.Context, id string) error {
 	}
 
 	res, err := sr.db.DeleteOne(ctx, bson.M{"_id": objectId})
-	if res.DeletedCount == 0 {
+	if res != nil && res.DeletedCount == 0 {
 		return domain.ErrNotFound
 	}
 
