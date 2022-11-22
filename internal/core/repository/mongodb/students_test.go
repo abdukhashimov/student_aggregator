@@ -13,7 +13,7 @@ type collectionMock struct {
 	data interface{}
 }
 
-func (m collectionMock) InsertOne(ctx context.Context, document interface{},
+func (m *collectionMock) InsertOne(ctx context.Context, document interface{},
 	_ ...*options.InsertOneOptions) (*mongo.InsertOneResult, error) {
 	if ctx.Value("withErr") == true {
 		return &mongo.InsertOneResult{InsertedID: 0}, mongo.ErrNilDocument
@@ -35,11 +35,13 @@ type args struct {
 }
 
 func getTestCases(source string) []test {
+	type key string
+	k := key("withErr")
 	return []test{
 		{
 			"no error",
 			args{
-				context.WithValue(context.Background(), "withErr", false),
+				context.WithValue(context.Background(), k, false),
 				domain.StudentRSS{},
 			},
 			domain.StudentRecord{Source: source},
@@ -47,7 +49,7 @@ func getTestCases(source string) []test {
 		}, {
 			"with error",
 			args{
-				context.WithValue(context.Background(), "withErr", true),
+				context.WithValue(context.Background(), k, true),
 				domain.StudentRSS{},
 			},
 			domain.StudentRecord{Source: source},
@@ -61,7 +63,7 @@ func TestStudentsRepo_SaveRSS(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mock := collectionMock{}
-			repo := newRepo(mock)
+			repo := newRepo(&mock)
 
 			_, err := repo.SaveRSS(tt.args.ctx, tt.args.student)
 			if (err != nil) != tt.wantErr {
@@ -80,7 +82,7 @@ func TestStudentsRepo_SaveWAC(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mock := collectionMock{}
-			repo := newRepo(mock)
+			repo := newRepo(&mock)
 
 			_, err := repo.SaveRSS(tt.args.ctx, tt.args.student)
 			if (err != nil) != tt.wantErr {
