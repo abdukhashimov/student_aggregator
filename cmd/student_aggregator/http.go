@@ -62,7 +62,7 @@ func serveHttp(port int) {
 	db := mongoClient.Database(cfg.MongoDB.Database)
 	log.Info("mongo db client successfully initialized")
 
-	storageClient := minio.NewClient(cfg.Storage.URI, cfg.Storage.AccessKeyID, cfg.Storage.SecretAccessKey)
+	storageClient := minio.NewClient(cfg.Storage)
 	logger.Log.Info("Minio connection success")
 
 	server := handlers.NewServer(db, storageClient, cfg)

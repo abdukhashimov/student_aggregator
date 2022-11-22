@@ -39,6 +39,7 @@ type ProjectConfig struct {
 	GracefulTimeoutSeconds int    `yaml:"gracefulTimeoutSeconds"`
 	JwtSecret              string `env:"APPLICATION_JWT_SECRET"`
 	SwaggerEnabled         bool   `yaml:"swaggerEnabled"`
+	FileUploadMaxMegabytes int    `yaml:"fileUploadMaxMegabytes"`
 }
 
 type MongoDBConfig struct {

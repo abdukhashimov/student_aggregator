@@ -48,7 +48,7 @@ func NewServer(db *mongo.Database, storageClient *minio.Client, cfg *config.Conf
 	s.userService = servs.Users
 	s.schemasService = servs.Schemas
 
-	s.storageService = &services.StorageService{}
+	s.storageService = servs.Storage
 	s.storageService.SetClient(storageClient)
 
 	logger.Log.Info("services successfully initialized")
