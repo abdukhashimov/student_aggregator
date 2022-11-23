@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"github.com/rs/cors"
 	"net/http"
+
+	"github.com/rs/cors"
 )
 
 func (s *Server) routes() {
@@ -26,6 +27,7 @@ func (s *Server) routes() {
 		authApiRoutes.Handle("/schemas/{id}", s.getSchemaById()).Methods(http.MethodGet)
 		authApiRoutes.Handle("/schemas/{id}", s.updateSchema()).Methods(http.MethodPatch)
 		authApiRoutes.Handle("/schemas/{id}", s.deleteSchema()).Methods(http.MethodDelete)
+		authApiRoutes.Handle("/storage/upload", s.blobUpload()).Methods(http.MethodPost)
 	}
 }
 

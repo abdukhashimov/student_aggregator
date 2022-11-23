@@ -3,6 +3,7 @@ project:
   gracefulTimeoutSeconds: 5
   version: 1.0.0
   swaggerEnabled: true
+  fileUploadMaxMegabytes: 30
 mongodb:
   database: aggregator
 logging:

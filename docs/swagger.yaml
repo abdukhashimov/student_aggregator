@@ -91,6 +91,11 @@ definitions:
       username:
         type: string
     type: object
+  handlers.FileUploadInfo:
+    properties:
+      file_key:
+        type: string
+    type: object
   handlers.SchemaResponse:
     properties:
       schema:
@@ -270,6 +275,40 @@ paths:
       summary: Update Schema By ID
       tags:
       - schema
+  /storage/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Creates new blob object in storage with file name
+      parameters:
+      - description: new object name in storage
+        in: formData
+        name: file_name
+        required: true
+        type: string
+      - description: new object base file
+        in: formData
+        items:
+          type: integer
+        name: file_object
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.FileUploadInfo'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Uploads files to blob storage
+      tags:
+      - file-upload
   /user:
     get:
       consumes:

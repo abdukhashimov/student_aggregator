@@ -248,6 +248,57 @@
                 }
             }
         },
+        "/storage/upload": {
+            "post": {
+                "description": "Creates new blob object in storage with file name",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "file-upload"
+                ],
+                "summary": "Uploads files to blob storage",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "new object name in storage",
+                        "name": "file_name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "description": "new object base file",
+                        "name": "file_object",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.FileUploadInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "security": [
@@ -498,6 +549,14 @@
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.FileUploadInfo": {
+            "type": "object",
+            "properties": {
+                "file_key": {
                     "type": "string"
                 }
             }
