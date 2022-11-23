@@ -51,5 +51,5 @@ func (sr *StudentsRepo) save(ctx context.Context, student domain.StudentRecord) 
 
 	oid := getIdFromObjectID(res.InsertedID)
 
-	return fmt.Sprintf("%s", oid), nil
+	return oid, nil
 }
