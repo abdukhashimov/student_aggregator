@@ -1,7 +1,9 @@
 package domain
 
-var RSS = "RSS"
-var WAC = "WAC"
+const (
+	RSS = "RSS"
+	WAC = "WAC"
+)
 
 type StudentRecord struct {
 	Source string `json:"source" bson:"source"` // RSS, WAC
@@ -25,15 +27,17 @@ type StudentWAC struct {
 	Registered               int      `json:"registered" bson:"registered,omitempty"`
 }
 
+type Project struct {
+	Name       string `json:"name" bson:"name,omitempty"`
+	Score      int    `json:"score" bson:"score,omitempty"`
+	FinishedAt string `json:"finished_at" bson:"finished_at,omitempty"`
+	Deadline   string `json:"deadline" bson:"deadline,omitempty"`
+}
+
 type StudentRSS struct {
-	FirstName       string   `json:"first_name" bson:"first_name,omitempty"`
-	LastName        string   `json:"last_name" bson:"last_name,omitempty"`
-	StatusItems     []string `json:"status_items" bson:"status_items,omitempty"`
-	ApplicationDate string   `json:"application_date" bson:"application_date,omitempty"`
-	Projects        []struct {
-		Name       string `json:"name" bson:"name,omitempty"`
-		Score      int    `json:"score" bson:"score,omitempty"`
-		FinishedAt string `json:"finished_at" bson:"finished_at,omitempty"`
-		Deadline   string `json:"deadline" bson:"deadline,omitempty"`
-	} `json:"projects" bson:"projects,omitempty"`
+	FirstName       string    `json:"first_name" bson:"first_name,omitempty"`
+	LastName        string    `json:"last_name" bson:"last_name,omitempty"`
+	StatusItems     []string  `json:"status_items" bson:"status_items,omitempty"`
+	ApplicationDate string    `json:"application_date" bson:"application_date,omitempty"`
+	Projects        []Project `json:"projects" bson:"projects,omitempty"`
 }
