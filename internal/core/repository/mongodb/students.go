@@ -49,5 +49,7 @@ func (sr *StudentsRepo) save(ctx context.Context, student domain.StudentRecord) 
 		return "", err
 	}
 
-	return fmt.Sprintf("%s", res.InsertedID), nil
+	oid := getIdFromObjectID(res.InsertedID)
+
+	return fmt.Sprintf("%s", oid), nil
 }
