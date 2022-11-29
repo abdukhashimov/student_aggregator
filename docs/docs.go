@@ -42,13 +42,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": ""
                     },
                     "422": {
-                        "description": "Unprocessable Entity"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             }
@@ -68,10 +68,10 @@ const docTemplate = `{
                 "summary": "Health Check",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             }
@@ -102,10 +102,10 @@ const docTemplate = `{
                         }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             },
@@ -134,13 +134,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": ""
                     },
                     "422": {
-                        "description": "Unprocessable Entity"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             }
@@ -175,10 +175,10 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Not Found"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             },
@@ -205,13 +205,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": ""
                     },
                     "404": {
-                        "description": "Not Found"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             },
@@ -246,19 +246,24 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Not Found"
+                        "description": ""
                     },
                     "422": {
-                        "description": "Unprocessable Entity"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             }
         },
         "/storage/upload": {
             "post": {
+                "security": [
+                    {
+                        "UsersAuth": []
+                    }
+                ],
                 "description": "Creates new blob object in storage with file name",
                 "consumes": [
                     "multipart/form-data"
@@ -279,12 +284,9 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "array",
-                        "items": {
-                            "type": "integer"
-                        },
-                        "description": "new object base file",
-                        "name": "file_object",
+                        "type": "file",
+                        "description": "file",
+                        "name": "file",
                         "in": "formData",
                         "required": true
                     }
@@ -297,13 +299,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request"
+                        "description": ""
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             }
@@ -334,10 +336,10 @@ const docTemplate = `{
                         }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             }
@@ -368,13 +370,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": ""
                     },
                     "422": {
-                        "description": "Unprocessable Entity"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             }
@@ -411,10 +413,10 @@ const docTemplate = `{
                         }
                     },
                     "422": {
-                        "description": "Unprocessable Entity"
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": ""
                     }
                 }
             }
