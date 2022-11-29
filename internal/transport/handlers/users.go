@@ -66,27 +66,15 @@ func (s *Server) loginUser() http.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Router /users [post]
-func (s *Server) createUser() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		input := domain.SignUpUserInput{}
-
-		err := readJSON(r.Body, &input)
-		if err != nil {
-			sendUnprocessableEntityError(w, err)
-			return
-		}
-
-		//ToDo: add input validation
-
-		_, err = s.userService.SignUp(r.Context(), input)
-		if err != nil {
-			// toDo: check other error types
-			writeJSON(w, http.StatusInternalServerError, M{"message": "internal error"})
-			return
-		}
-
-		sendCode(w, http.StatusCreated)
+func (s *Server) createUser(input domain.SignUpUserInput, w http.ResponseWriter, r *http.Request) {
+	_, err := s.userService.SignUp(r.Context(), input)
+	if err != nil {
+		// toDo: check other error types
+		writeJSON(w, http.StatusInternalServerError, M{"message": "internal error"})
+		return
 	}
+
+	sendCode(w, http.StatusCreated)
 }
 
 // @Summary User Profile

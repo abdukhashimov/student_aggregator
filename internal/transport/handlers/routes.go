@@ -14,7 +14,7 @@ func (s *Server) routes() {
 	{
 		noAuth.Handle("/health", healthCheck()).Methods(http.MethodGet)
 		noAuth.Handle("/users/login", s.loginUser()).Methods(http.MethodPost)
-		noAuth.Handle("/users", s.createUser()).Methods(http.MethodPost)
+		noAuth.Handle("/users", validatorWrapper(s.createUser)).Methods(http.MethodPost)
 		noAuth.Handle("/auth/refresh", s.refreshToken()).Methods(http.MethodPost)
 	}
 

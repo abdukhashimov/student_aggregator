@@ -51,6 +51,10 @@ func sendUnprocessableEntityError(w http.ResponseWriter, err error) {
 	writeErrorResponse(w, http.StatusUnprocessableEntity, "unprocessable entity")
 }
 
+func sendValidationError(w http.ResponseWriter, errs []string) {
+	writeErrorResponse(w, http.StatusUnprocessableEntity, errs)
+}
+
 func sendUnauthorizedError(w http.ResponseWriter, email string) {
 	logger.Log.Debugf("invalid authentication credentials. email: %s", email)
 	writeErrorResponse(w, http.StatusUnprocessableEntity, "invalid authentication credentials")
