@@ -4,10 +4,14 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
+
+	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
+	"github.com/abdukhashimov/student_aggregator/pkg/slugify"
 )
 
 type FileUploadInfo struct {
-	File_key string `json:"file_key"`
+	FileKey string `json:"file_key"`
+	FileURl string `json:"file_url"`
 }
 
 // @Summary Uploads files to blob storage
@@ -32,9 +36,12 @@ func (s *Server) blobUpload() http.HandlerFunc {
 		MB = 1 << 20
 	)
 
+	var (
+		contentType = "application/octet-stream"
+	)
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := r.ParseMultipartForm(int64(s.config.Project.FileUploadMaxMegabytes) * MB)
-
 		if err != nil {
 			writeJSON(w, http.StatusBadRequest, M{
 				"error": "can't parse request form",
@@ -43,7 +50,6 @@ func (s *Server) blobUpload() http.HandlerFunc {
 		}
 
 		fileName := r.FormValue(fileNameField)
-
 		if len(fileName) == 0 {
 			writeJSON(w, http.StatusBadRequest, M{
 				"error": "file name not provided",
@@ -51,10 +57,10 @@ func (s *Server) blobUpload() http.HandlerFunc {
 			return
 		}
 
-		body, fileHeader, err := r.FormFile(fileBodyField)
+		fileName = slugify.GenSlugWithID(fileName)
 
+		body, fileHeader, err := r.FormFile(fileBodyField)
 		if err != nil {
-			fmt.Println(err)
 			writeJSON(w, http.StatusBadRequest, M{
 				"error": "can't parse file content",
 			})
@@ -68,8 +74,12 @@ func (s *Server) blobUpload() http.HandlerFunc {
 			return
 		}
 
-		key, err := s.storageService.PutFile(r.Context(), fileName, body, fileHeader.Size)
+		if types, ok := fileHeader.Header["Content-Type"]; ok && len(types) > 0 {
+			contentType = types[0]
+		}
 
+		key, err := s.storageService.PutFile(r.Context(), domain.PutFileOptions{
+			ObjectName: fileName, Body: body, Size: fileHeader.Size, ContentType: contentType})
 		if err != nil {
 			writeJSON(w, http.StatusInternalServerError, M{
 				"error": "can't put file to storage",
@@ -78,7 +88,8 @@ func (s *Server) blobUpload() http.HandlerFunc {
 		}
 
 		writeJSON(w, http.StatusOK, FileUploadInfo{
-			File_key: base64.RawStdEncoding.EncodeToString([]byte(key)),
+			FileKey: base64.RawStdEncoding.EncodeToString([]byte(key)),
+			FileURl: fmt.Sprintf("%s/%s/%s", s.config.Storage.URI, s.config.Storage.BucketName, fileName),
 		})
 	}
 }
