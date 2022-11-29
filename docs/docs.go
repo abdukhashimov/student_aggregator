@@ -569,6 +569,9 @@ const docTemplate = `{
             "properties": {
                 "file_key": {
                     "type": "string"
+                },
+                "file_url": {
+                    "type": "string"
                 }
             }
         },
