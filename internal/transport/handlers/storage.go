@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/base64"
+	"fmt"
 	"net/http"
 )
 
@@ -11,10 +12,11 @@ type FileUploadInfo struct {
 
 // @Summary Uploads files to blob storage
 // @Description Creates new blob object in storage with file name
+// @Security UsersAuth
 // @Tags file-upload
 // @Accept multipart/form-data
 // @Param file_name formData string true "new object name in storage"
-// @Param file_object formData []byte true "new object base file"
+// @Param file formData file true "file"
 // @Success 200 {object} FileUploadInfo
 // @Failure 400
 // @Failure 401
@@ -25,7 +27,7 @@ func (s *Server) blobUpload() http.HandlerFunc {
 
 	const (
 		fileNameField = "file_name"
-		fileBodyField = "file_object"
+		fileBodyField = "file"
 
 		MB = 1 << 20
 	)
@@ -52,6 +54,7 @@ func (s *Server) blobUpload() http.HandlerFunc {
 		body, fileHeader, err := r.FormFile(fileBodyField)
 
 		if err != nil {
+			fmt.Println(err)
 			writeJSON(w, http.StatusBadRequest, M{
 				"error": "can't parse file content",
 			})
