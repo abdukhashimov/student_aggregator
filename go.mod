@@ -1,11 +1,12 @@
 module github.com/abdukhashimov/student_aggregator
 
-go 1.19
+go 1.18
 
 require (
 	github.com/Netflix/go-env v0.0.0-20220526054621-78278af1949d
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gorilla/mux v1.8.0
+	github.com/gosimple/slug v1.13.1
 	github.com/joho/godotenv v1.4.0
 	github.com/minio/minio-go/v7 v7.0.43
 	github.com/mitchellh/mapstructure v1.5.0
@@ -14,6 +15,7 @@ require (
 	github.com/spf13/cobra v1.6.1
 	github.com/swaggo/http-swagger v1.3.3
 	github.com/swaggo/swag v1.8.7
+	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	github.com/xuri/excelize/v2 v2.6.1
 	go.mongodb.org/mongo-driver v1.10.3
 	go.uber.org/zap v1.23.0
@@ -30,6 +32,7 @@ require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/gosimple/unidecode v1.0.1 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
