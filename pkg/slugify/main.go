@@ -2,6 +2,7 @@ package slugify
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gosimple/slug"
 	"github.com/teris-io/shortid"
@@ -16,7 +17,7 @@ func GenSlug(filename string) string {
 }
 
 func GenSlugWithID(filename string) string {
-	id := shortid.MustGenerate()
+	id := strings.ToLower(shortid.MustGenerate())
 
 	return fmt.Sprintf("%s-%s", fileNameWithMaxLength(filename), id)
 }
