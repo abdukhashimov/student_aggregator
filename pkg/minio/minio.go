@@ -25,7 +25,6 @@ func NewClient(conf config.StorageConfig) *minio.Client {
 	defer cancelCtx()
 
 	exists, errBucketExists := storageClient.BucketExists(bucketCtx, conf.BucketName)
-
 	if errBucketExists != nil {
 		panic(err)
 	}
