@@ -146,7 +146,7 @@ func TestLoginUser(t *testing.T) {
 			r := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(data))
 
 			// Test loginUser method
-			server.loginUser().ServeHTTP(w, r)
+			server.loginUser(w, r)
 
 			result := w.Result()
 			body, _ := io.ReadAll(result.Body)
@@ -182,7 +182,7 @@ func TestCreateUser(t *testing.T) {
 			r := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(data))
 
 			// Test createUser method
-			server.createUser().ServeHTTP(w, r)
+			server.createUser(w, r)
 
 			result := w.Result()
 			body, _ := io.ReadAll(result.Body)
@@ -225,7 +225,7 @@ func TestGetCurrentUser(t *testing.T) {
 			r = tc.prepareRequest(r)
 
 			// Test getCurrentUser method
-			server.getCurrentUser().ServeHTTP(w, r)
+			server.getCurrentUser(w, r)
 
 			result := w.Result()
 			body, _ := io.ReadAll(result.Body)
@@ -259,7 +259,7 @@ func TestRefreshToken(t *testing.T) {
 			r := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(data))
 
 			// Test refreshToken method
-			server.refreshToken().ServeHTTP(w, r)
+			server.refreshToken(w, r)
 
 			result := w.Result()
 			body, _ := io.ReadAll(result.Body)

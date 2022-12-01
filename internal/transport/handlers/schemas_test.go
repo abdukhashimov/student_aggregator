@@ -50,7 +50,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 		name:          "listSchemas",
 		requestMethod: http.MethodGet,
 		getHandler: func(s *Server) http.HandlerFunc {
-			return s.listSchemas()
+			return s.listSchemas
 		},
 		testCases: []SchemaTestCase{
 			{
@@ -72,7 +72,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 		name:          "createSchema",
 		requestMethod: http.MethodPost,
 		getHandler: func(s *Server) http.HandlerFunc {
-			return s.createSchema()
+			return s.createSchema
 		},
 		testCases: []SchemaTestCase{
 			{
@@ -132,7 +132,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 		name:          "getSchemaById",
 		requestMethod: http.MethodGet,
 		getHandler: func(s *Server) http.HandlerFunc {
-			return s.getSchemaById()
+			return s.getSchemaById
 		},
 		testCases: []SchemaTestCase{
 			{
@@ -174,7 +174,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 		name:          "updateSchema",
 		requestMethod: http.MethodPost,
 		getHandler: func(s *Server) http.HandlerFunc {
-			return s.updateSchema()
+			return s.updateSchema
 		},
 		testCases: []SchemaTestCase{
 			{
@@ -318,7 +318,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 		name:          "deleteSchema",
 		requestMethod: http.MethodDelete,
 		getHandler: func(s *Server) http.HandlerFunc {
-			return s.deleteSchema()
+			return s.deleteSchema
 		},
 		testCases: []SchemaTestCase{
 			{
