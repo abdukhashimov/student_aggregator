@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
 	"net/http"
 
 	"github.com/rs/cors"
@@ -13,19 +14,19 @@ func (s *Server) routes() {
 	noAuth := apiRouter.PathPrefix("").Subrouter()
 	{
 		noAuth.Handle("/health", http.HandlerFunc(healthCheck)).Methods(http.MethodGet)
-		noAuth.Handle("/users/login", http.HandlerFunc(s.loginUser)).Methods(http.MethodPost)
-		noAuth.Handle("/users", http.HandlerFunc(s.createUser)).Methods(http.MethodPost)
-		noAuth.Handle("/auth/refresh", http.HandlerFunc(s.refreshToken)).Methods(http.MethodPost)
+		noAuth.Handle("/users/login", validatorWrapper[domain.SignInUserInput](s.loginUser)).Methods(http.MethodPost)
+		noAuth.Handle("/users", validatorWrapper[domain.SignUpUserInput](s.createUser)).Methods(http.MethodPost)
+		noAuth.Handle("/auth/refresh", validatorWrapper[domain.TokenInput](s.refreshToken)).Methods(http.MethodPost)
 	}
 
 	authApiRoutes := apiRouter.PathPrefix("").Subrouter()
 	authApiRoutes.Use(s.authenticate)
 	{
 		authApiRoutes.Handle("/user", http.HandlerFunc(s.getCurrentUser)).Methods(http.MethodGet)
-		authApiRoutes.Handle("/schemas", http.HandlerFunc(s.createSchema)).Methods(http.MethodPost)
+		authApiRoutes.Handle("/schemas", validatorWrapper[domain.NewSchemaInput](s.createSchema)).Methods(http.MethodPost)
 		authApiRoutes.Handle("/schemas", http.HandlerFunc(s.listSchemas)).Methods(http.MethodGet)
 		authApiRoutes.Handle("/schemas/{id}", http.HandlerFunc(s.getSchemaById)).Methods(http.MethodGet)
-		authApiRoutes.Handle("/schemas/{id}", http.HandlerFunc(s.updateSchema)).Methods(http.MethodPatch)
+		authApiRoutes.Handle("/schemas/{id}", validatorWrapper[domain.UpdateSchemaInput](s.updateSchema)).Methods(http.MethodPatch)
 		authApiRoutes.Handle("/schemas/{id}", http.HandlerFunc(s.deleteSchema)).Methods(http.MethodDelete)
 		authApiRoutes.Handle("/storage/upload", s.blobUpload()).Methods(http.MethodPost)
 	}
