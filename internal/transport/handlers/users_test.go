@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -138,12 +136,13 @@ func TestLoginUser(t *testing.T) {
 				userService: mockUsersService,
 			}
 
-			data, _ := json.Marshal(domain.SignInUserInput{
+			w := httptest.NewRecorder()
+			r := httptest.NewRequest(http.MethodPost, "/", nil)
+			input := domain.SignInUserInput{
 				Email:    tc.email,
 				Password: tc.password,
-			})
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(data))
+			}
+			r = inputToContext(r, &input)
 
 			// Test loginUser method
 			server.loginUser(w, r)
@@ -173,13 +172,14 @@ func TestCreateUser(t *testing.T) {
 				userService: mockUsersService,
 			}
 
-			data, _ := json.Marshal(domain.SignUpUserInput{
+			w := httptest.NewRecorder()
+			r := httptest.NewRequest(http.MethodPost, "/", nil)
+			input := domain.SignUpUserInput{
 				Username: tc.username,
 				Email:    tc.email,
 				Password: tc.password,
-			})
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(data))
+			}
+			r = inputToContext(r, &input)
 
 			// Test createUser method
 			server.createUser(w, r)
@@ -252,11 +252,12 @@ func TestRefreshToken(t *testing.T) {
 				userService: mockUsersService,
 			}
 
-			data, _ := json.Marshal(domain.TokenInput{
-				Token: tc.token,
-			})
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(data))
+			r := httptest.NewRequest(http.MethodPost, "/", nil)
+			input := domain.TokenInput{
+				Token: tc.token,
+			}
+			r = inputToContext(r, &input)
 
 			// Test refreshToken method
 			server.refreshToken(w, r)

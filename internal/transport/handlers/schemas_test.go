@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/abdukhashimov/student_aggregator/mocks/utils"
@@ -38,7 +36,7 @@ type SchemaTestCaseGroup struct {
 
 type SchemaTestCase struct {
 	name           string
-	requestBody    any
+	requestInput   any
 	prepareRequest func(r *http.Request) *http.Request
 	expectedBody   string
 	expectedCode   int
@@ -77,7 +75,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 		testCases: []SchemaTestCase{
 			{
 				name: "success",
-				requestBody: domain.NewSchemaInput{
+				requestInput: &domain.NewSchemaInput{
 					Name:       "New Schema",
 					Version:    "1.0.0",
 					SchemaType: "coords",
@@ -93,7 +91,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 			},
 			{
 				name: "duplicate",
-				requestBody: domain.NewSchemaInput{
+				requestInput: &domain.NewSchemaInput{
 					Name:       "RSS",
 					Version:    "1.0.0",
 					SchemaType: "coords",
@@ -109,7 +107,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 			},
 			{
 				name: "internalError",
-				requestBody: domain.NewSchemaInput{
+				requestInput: &domain.NewSchemaInput{
 					Name:       "New Schema",
 					Version:    "1.0.0",
 					SchemaType: "coords",
@@ -185,7 +183,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					})
 					return r
 				},
-				requestBody: domain.UpdateSchemaInput{
+				requestInput: &domain.UpdateSchemaInput{
 					Name:       &updateSchemaName,
 					Version:    &updateSchemaVersion,
 					SchemaType: &updateSchemaSchemaType,
@@ -203,7 +201,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					})
 					return r
 				},
-				requestBody: domain.UpdateSchemaInput{
+				requestInput: &domain.UpdateSchemaInput{
 					Name: &updateSchemaName,
 				},
 				expectedBody: `{"schema":{"id":"1","name":"updateSchemaName","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"first_name"},{"col":"B","name":"last_name"},{"col":"C","name":"email"}]}}`,
@@ -217,7 +215,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					})
 					return r
 				},
-				requestBody: domain.UpdateSchemaInput{
+				requestInput: &domain.UpdateSchemaInput{
 					Version: &updateSchemaVersion,
 				},
 				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"updateSchemaVersion","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"first_name"},{"col":"B","name":"last_name"},{"col":"C","name":"email"}]}}`,
@@ -231,7 +229,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					})
 					return r
 				},
-				requestBody: domain.UpdateSchemaInput{
+				requestInput: &domain.UpdateSchemaInput{
 					SchemaType: &updateSchemaSchemaType,
 				},
 				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"updateSchemaSchemaType","headers":true,"fields":[{"col":"A","name":"first_name"},{"col":"B","name":"last_name"},{"col":"C","name":"email"}]}}`,
@@ -245,7 +243,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					})
 					return r
 				},
-				requestBody: domain.UpdateSchemaInput{
+				requestInput: &domain.UpdateSchemaInput{
 					Headers: &updateSchemaHeaders,
 				},
 				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"coords","headers":false,"fields":[{"col":"A","name":"first_name"},{"col":"B","name":"last_name"},{"col":"C","name":"email"}]}}`,
@@ -259,7 +257,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					})
 					return r
 				},
-				requestBody: domain.UpdateSchemaInput{
+				requestInput: &domain.UpdateSchemaInput{
 					Fields: &updateSchemaFields,
 				},
 				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"D","name":"name"},{"col":"E","name":"surname"},{"col":"F","name":"em"}]}}`,
@@ -273,8 +271,8 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					})
 					return r
 				},
-				expectedBody: `{"errors":"unprocessable entity"}`,
-				expectedCode: http.StatusUnprocessableEntity,
+				expectedBody: `{"errors":"internal error"}`,
+				expectedCode: http.StatusInternalServerError,
 			},
 			{
 				name: "notFound",
@@ -284,7 +282,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					})
 					return r
 				},
-				requestBody: domain.UpdateSchemaInput{
+				requestInput: &domain.UpdateSchemaInput{
 					Name:       &updateSchemaName,
 					Version:    &updateSchemaVersion,
 					SchemaType: &updateSchemaSchemaType,
@@ -302,7 +300,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					})
 					return utils.SetWithErrorToRequest(r, true)
 				},
-				requestBody: domain.UpdateSchemaInput{
+				requestInput: &domain.UpdateSchemaInput{
 					Name:       &updateSchemaName,
 					Version:    &updateSchemaVersion,
 					SchemaType: &updateSchemaSchemaType,
@@ -374,21 +372,13 @@ func TestSchemas(t *testing.T) {
 					schemasService: mockSchemasService,
 				}
 
-				var requestDody io.Reader
-				if tc.requestBody != nil {
-					data, err := json.Marshal(tc.requestBody)
-					if err != nil {
-						t.Error("unexpected response")
-						return
-					}
-
-					requestDody = bytes.NewReader(data)
-				}
-
 				w := httptest.NewRecorder()
-				r := httptest.NewRequest(tcGroup.requestMethod, "/", requestDody)
+				r := httptest.NewRequest(tcGroup.requestMethod, "/", nil)
 				if tc.prepareRequest != nil {
 					r = tc.prepareRequest(r)
+				}
+				if tc.requestInput != nil {
+					r = inputToContext(r, tc.requestInput)
 				}
 
 				tcGroup.getHandler(server).ServeHTTP(w, r)

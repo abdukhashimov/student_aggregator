@@ -94,6 +94,14 @@ var ErrorResponseTests = []ErrorResponseTest{
 		},
 	},
 	{
+		"sendValidationError",
+		http.StatusUnprocessableEntity,
+		`{"errors":["error #1","error #2"]}`,
+		func(w http.ResponseWriter) {
+			sendValidationError(w, []string{"error #1", "error #2"})
+		},
+	},
+	{
 		"sendInvalidAuthTokenError",
 		http.StatusUnauthorized,
 		`{"errors":"invalid or missing authentication token"}`,
