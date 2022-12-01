@@ -56,6 +56,10 @@ func sendUnauthorizedError(w http.ResponseWriter, email string) {
 	writeErrorResponse(w, http.StatusUnprocessableEntity, "invalid authentication credentials")
 }
 
+func sendValidationError(w http.ResponseWriter, errs []string) {
+	writeErrorResponse(w, http.StatusUnprocessableEntity, errs)
+}
+
 func sendInvalidAuthTokenError(w http.ResponseWriter) {
 	logger.Log.Info("invalid or missing authentication token")
 	w.Header().Set("WWW-Authenticate", "Token")
