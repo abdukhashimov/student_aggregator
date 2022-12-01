@@ -22,14 +22,13 @@ type UserProfileResponse struct {
 // @Produce json
 // @Router /users/login [post]
 func (s *Server) loginUser(w http.ResponseWriter, r *http.Request) {
-	input := domain.SignInUserInput{}
-
-	if err := readJSON(r.Body, &input); err != nil {
-		sendUnprocessableEntityError(w, err)
+	input, err := inputFromContext[domain.SignInUserInput](r.Context())
+	if err != nil {
+		sendServerError(w, err)
 		return
 	}
 
-	userId, err := s.userService.SignIn(r.Context(), input)
+	userId, err := s.userService.SignIn(r.Context(), *input)
 
 	if err != nil {
 		if err == domain.ErrNotFound {
@@ -65,15 +64,13 @@ func (s *Server) loginUser(w http.ResponseWriter, r *http.Request) {
 // @Produce json
 // @Router /users [post]
 func (s *Server) createUser(w http.ResponseWriter, r *http.Request) {
-	input := domain.SignUpUserInput{}
-
-	err := readJSON(r.Body, &input)
+	input, err := inputFromContext[domain.SignUpUserInput](r.Context())
 	if err != nil {
-		sendUnprocessableEntityError(w, err)
+		sendServerError(w, err)
 		return
 	}
 
-	_, err = s.userService.SignUp(r.Context(), input)
+	_, err = s.userService.SignUp(r.Context(), *input)
 	if err != nil {
 		// toDo: check other error types
 		writeJSON(w, http.StatusInternalServerError, M{"message": "internal error"})
@@ -117,10 +114,9 @@ func (s *Server) getCurrentUser(w http.ResponseWriter, r *http.Request) {
 // @Produce json
 // @Router /auth/refresh [post]
 func (s *Server) refreshToken(w http.ResponseWriter, r *http.Request) {
-	input := domain.TokenInput{}
-
-	if err := readJSON(r.Body, &input); err != nil {
-		sendUnprocessableEntityError(w, err)
+	input, err := inputFromContext[domain.TokenInput](r.Context())
+	if err != nil {
+		sendServerError(w, err)
 		return
 	}
 

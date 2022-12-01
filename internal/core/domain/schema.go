@@ -16,18 +16,18 @@ type FieldSchema struct {
 }
 
 type NewSchemaInput struct {
-	Name       string        `json:"name"`
-	Version    string        `json:"version"`
-	SchemaType string        `json:"schema_type"`
-	Headers    bool          `json:"headers"`
-	Fields     []FieldSchema `json:"fields"`
+	Name       string        `json:"name" validate:"required,min=3"`
+	Version    string        `json:"version" validate:"required"`
+	SchemaType string        `json:"schema_type" validate:"required"`
+	Headers    bool          `json:"headers" validate:"required"`
+	Fields     []FieldSchema `json:"fields" validate:"required"`
 }
 
 type UpdateSchemaInput struct {
-	Name       *string        `json:"name" bson:"name,omitempty"`
-	Slug       *string        `json:"-" bson:"slug,omitempty"`
-	Version    *string        `json:"version" bson:"version,omitempty"`
-	SchemaType *string        `json:"schema_type" bson:"schema_type,omitempty"`
-	Headers    *bool          `json:"headers" bson:"headers,omitempty"`
-	Fields     *[]FieldSchema `json:"fields" bson:"fields,omitempty"`
+	Name       *string        `json:"name" bson:"name,omitempty" validate:"omitempty,required,min=3"`
+	Slug       *string        `json:"-" bson:"slug,omitempty" validate:"omitempty,required"`
+	Version    *string        `json:"version" bson:"version,omitempty" validate:"omitempty,required"`
+	SchemaType *string        `json:"schema_type" bson:"schema_type,omitempty" validate:"omitempty,required"`
+	Headers    *bool          `json:"headers" bson:"headers,omitempty" validate:"omitempty,required"`
+	Fields     *[]FieldSchema `json:"fields" bson:"fields,omitempty" validate:"omitempty,required"`
 }

@@ -13,5 +13,5 @@ type Tokens struct {
 }
 
 type TokenInput struct {
-	Token string `json:"token"`
+	Token string `json:"token" validate:"required"`
 }

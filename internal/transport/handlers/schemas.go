@@ -48,15 +48,13 @@ func (s *Server) listSchemas(w http.ResponseWriter, r *http.Request) {
 // @Produce json
 // @Router /schemas [post]
 func (s *Server) createSchema(w http.ResponseWriter, r *http.Request) {
-	input := domain.NewSchemaInput{}
-
-	err := readJSON(r.Body, &input)
+	input, err := inputFromContext[domain.NewSchemaInput](r.Context())
 	if err != nil {
-		sendUnprocessableEntityError(w, err)
+		sendServerError(w, err)
 		return
 	}
 
-	schema, err := s.schemasService.NewSchema(r.Context(), input)
+	schema, err := s.schemasService.NewSchema(r.Context(), *input)
 	if err != nil {
 		if err == domain.DuplicationError {
 			sendDuplicatedError(w, "name")
@@ -125,14 +123,13 @@ func (s *Server) updateSchema(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	input := domain.UpdateSchemaInput{}
-	err := readJSON(r.Body, &input)
+	input, err := inputFromContext[domain.UpdateSchemaInput](r.Context())
 	if err != nil {
-		sendUnprocessableEntityError(w, err)
+		sendServerError(w, err)
 		return
 	}
 
-	schema, err := s.schemasService.UpdateSchema(r.Context(), id, input)
+	schema, err := s.schemasService.UpdateSchema(r.Context(), id, *input)
 	if err != nil {
 		if err == domain.DuplicationError {
 			sendDuplicatedError(w, "name")
