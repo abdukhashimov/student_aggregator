@@ -2,12 +2,13 @@ package mongodb
 
 import (
 	"context"
+
 	"github.com/abdukhashimov/student_aggregator/internal/core/domain"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-//const studentsCollection = "students"
+const studentsCollection = "students"
 
 type StudentCollection interface {
 	InsertOne(ctx context.Context, document interface{},
@@ -18,9 +19,9 @@ type StudentsRepo struct {
 	col StudentCollection
 }
 
-//func NewStudentsRepo(db *mongo.Database) *StudentsRepo {
-//	return newRepo(db.Collection(studentsCollection))
-//}
+func NewStudentsRepo(db *mongo.Database) *StudentsRepo {
+	return newRepo(db.Collection(studentsCollection))
+}
 
 func newRepo(col StudentCollection) *StudentsRepo {
 	return &StudentsRepo{col}
