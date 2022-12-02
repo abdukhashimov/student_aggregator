@@ -6,9 +6,11 @@ const (
 )
 
 type StudentRecord struct {
-	Source string `json:"source" bson:"source"` // RSS, WAC
-	Email  string `json:"email" bson:"email,omitempty"`
-	Status string `json:"status" bson:"status,omitempty"`
+	ID      string `json:"id" bson:"id"`
+	FileKey string `json:"file_key" bson:"file_key"`
+	Source  string `json:"source" bson:"source"` // RSS, WAC
+	Email   string `json:"email" bson:"email,omitempty"`
+	Status  string `json:"status" bson:"status,omitempty"`
 	StudentRSS
 	StudentWAC
 }
