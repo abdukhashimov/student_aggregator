@@ -30,7 +30,7 @@ func ParseCSVFile[T any](in *[]T, r io.Reader, s Schema) error {
 		return err
 	}
 
-	err = ParseXLSXFile[T](in, fb, s)
+	err = ParseXLSXFile(in, fb, s)
 	if err != nil {
 		return err
 	}
