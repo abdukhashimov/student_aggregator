@@ -2,10 +2,11 @@ package parser
 
 import (
 	"bytes"
-	"github.com/xuri/excelize/v2"
 	"io"
 	"reflect"
 	"testing"
+
+	"github.com/xuri/excelize/v2"
 )
 
 func getFileReader(t *testing.T, sheets []string, data map[string][]interface{}) io.Reader {
