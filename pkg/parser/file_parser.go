@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/csv"
 	"fmt"
+	"io"
+
 	"github.com/mitchellh/mapstructure"
 	"github.com/xuri/excelize/v2"
-	"io"
 )
 
 type FieldSchema struct {
