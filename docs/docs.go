@@ -42,13 +42,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": ""
+                        "description": "Created"
                     },
                     "422": {
-                        "description": ""
+                        "description": "Unprocessable Entity"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -68,10 +68,10 @@ const docTemplate = `{
                 "summary": "Health Check",
                 "responses": {
                     "200": {
-                        "description": ""
+                        "description": "OK"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -102,14 +102,19 @@ const docTemplate = `{
                         }
                     },
                     "401": {
-                        "description": ""
+                        "description": "Unauthorized"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "UsersAuth": []
+                    }
+                ],
                 "description": "schema creation process",
                 "consumes": [
                     "application/json"
@@ -134,19 +139,24 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": ""
+                        "description": "Created"
                     },
                     "422": {
-                        "description": ""
+                        "description": "Unprocessable Entity"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             }
         },
         "/schemas/{id}": {
             "get": {
+                "security": [
+                    {
+                        "UsersAuth": []
+                    }
+                ],
                 "description": "get course by id",
                 "consumes": [
                     "application/json"
@@ -175,14 +185,19 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": ""
+                        "description": "Not Found"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "UsersAuth": []
+                    }
+                ],
                 "description": "delete schema",
                 "consumes": [
                     "application/json"
@@ -205,17 +220,22 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": ""
+                        "description": "OK"
                     },
                     "404": {
-                        "description": ""
+                        "description": "Not Found"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             },
             "patch": {
+                "security": [
+                    {
+                        "UsersAuth": []
+                    }
+                ],
                 "description": "update schema by id",
                 "consumes": [
                     "application/json"
@@ -246,13 +266,13 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": ""
+                        "description": "Not Found"
                     },
                     "422": {
-                        "description": ""
+                        "description": "Unprocessable Entity"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -299,13 +319,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": ""
+                        "description": "Bad Request"
                     },
                     "401": {
-                        "description": ""
+                        "description": "Unauthorized"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -336,10 +356,10 @@ const docTemplate = `{
                         }
                     },
                     "401": {
-                        "description": ""
+                        "description": "Unauthorized"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -370,13 +390,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": ""
+                        "description": "Created"
                     },
                     "422": {
-                        "description": ""
+                        "description": "Unprocessable Entity"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -413,10 +433,10 @@ const docTemplate = `{
                         }
                     },
                     "422": {
-                        "description": ""
+                        "description": "Unprocessable Entity"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -436,6 +456,13 @@ const docTemplate = `{
         },
         "domain.NewSchemaInput": {
             "type": "object",
+            "required": [
+                "fields",
+                "headers",
+                "name",
+                "schema_type",
+                "version"
+            ],
             "properties": {
                 "fields": {
                     "type": "array",
@@ -447,7 +474,8 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 3
                 },
                 "schema_type": {
                     "type": "string"
@@ -485,6 +513,10 @@ const docTemplate = `{
         },
         "domain.SignInUserInput": {
             "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
             "properties": {
                 "email": {
                     "type": "string"
@@ -496,20 +528,32 @@ const docTemplate = `{
         },
         "domain.SignUpUserInput": {
             "type": "object",
+            "required": [
+                "email",
+                "password",
+                "username"
+            ],
             "properties": {
                 "email": {
                     "type": "string"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 8
                 },
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 6
                 }
             }
         },
         "domain.TokenInput": {
             "type": "object",
+            "required": [
+                "token"
+            ],
             "properties": {
                 "token": {
                     "type": "string"
@@ -529,6 +573,13 @@ const docTemplate = `{
         },
         "domain.UpdateSchemaInput": {
             "type": "object",
+            "required": [
+                "fields",
+                "headers",
+                "name",
+                "schema_type",
+                "version"
+            ],
             "properties": {
                 "fields": {
                     "type": "array",
@@ -540,7 +591,8 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 3
                 },
                 "schema_type": {
                     "type": "string"

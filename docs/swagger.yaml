@@ -16,11 +16,18 @@ definitions:
       headers:
         type: boolean
       name:
+        minLength: 3
         type: string
       schema_type:
         type: string
       version:
         type: string
+    required:
+    - fields
+    - headers
+    - name
+    - schema_type
+    - version
     type: object
   domain.Schema:
     properties:
@@ -45,20 +52,33 @@ definitions:
         type: string
       password:
         type: string
+    required:
+    - email
+    - password
     type: object
   domain.SignUpUserInput:
     properties:
       email:
         type: string
       password:
+        maxLength: 200
+        minLength: 8
         type: string
       username:
+        maxLength: 200
+        minLength: 6
         type: string
+    required:
+    - email
+    - password
+    - username
     type: object
   domain.TokenInput:
     properties:
       token:
         type: string
+    required:
+    - token
     type: object
   domain.Tokens:
     properties:
@@ -76,11 +96,18 @@ definitions:
       headers:
         type: boolean
       name:
+        minLength: 3
         type: string
       schema_type:
         type: string
       version:
         type: string
+    required:
+    - fields
+    - headers
+    - name
+    - schema_type
+    - version
     type: object
   domain.UserProfile:
     properties:
@@ -136,11 +163,11 @@ paths:
       - application/json
       responses:
         "201":
-          description: ""
+          description: Created
         "422":
-          description: ""
+          description: Unprocessable Entity
         "500":
-          description: ""
+          description: Internal Server Error
       summary: User Refresh Tokens
       tags:
       - user-auth
@@ -153,9 +180,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: ""
+          description: OK
         "500":
-          description: ""
+          description: Internal Server Error
       summary: Health Check
       tags:
       - health
@@ -172,9 +199,9 @@ paths:
           schema:
             $ref: '#/definitions/handlers.SchemasResponse'
         "401":
-          description: ""
+          description: Unauthorized
         "500":
-          description: ""
+          description: Internal Server Error
       security:
       - UsersAuth: []
       summary: List Schemas
@@ -195,11 +222,13 @@ paths:
       - application/json
       responses:
         "201":
-          description: ""
+          description: Created
         "422":
-          description: ""
+          description: Unprocessable Entity
         "500":
-          description: ""
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
       summary: Create Schema
       tags:
       - schema
@@ -218,11 +247,13 @@ paths:
       - application/json
       responses:
         "200":
-          description: ""
+          description: OK
         "404":
-          description: ""
+          description: Not Found
         "500":
-          description: ""
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
       summary: Delete Schema
       tags:
       - schema
@@ -244,9 +275,11 @@ paths:
           schema:
             $ref: '#/definitions/handlers.SchemaResponse'
         "404":
-          description: ""
+          description: Not Found
         "500":
-          description: ""
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
       summary: Get Schema By ID
       tags:
       - schema
@@ -269,11 +302,13 @@ paths:
           schema:
             $ref: '#/definitions/handlers.SchemaResponse'
         "404":
-          description: ""
+          description: Not Found
         "422":
-          description: ""
+          description: Unprocessable Entity
         "500":
-          description: ""
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
       summary: Update Schema By ID
       tags:
       - schema
@@ -301,11 +336,11 @@ paths:
           schema:
             $ref: '#/definitions/handlers.FileUploadInfo'
         "400":
-          description: ""
+          description: Bad Request
         "401":
-          description: ""
+          description: Unauthorized
         "500":
-          description: ""
+          description: Internal Server Error
       security:
       - UsersAuth: []
       summary: Uploads files to blob storage
@@ -324,9 +359,9 @@ paths:
           schema:
             $ref: '#/definitions/handlers.UserProfileResponse'
         "401":
-          description: ""
+          description: Unauthorized
         "500":
-          description: ""
+          description: Internal Server Error
       security:
       - UsersAuth: []
       summary: User Profile
@@ -348,11 +383,11 @@ paths:
       - application/json
       responses:
         "201":
-          description: ""
+          description: Created
         "422":
-          description: ""
+          description: Unprocessable Entity
         "500":
-          description: ""
+          description: Internal Server Error
       summary: User SignUp
       tags:
       - user-auth
@@ -376,9 +411,9 @@ paths:
           schema:
             $ref: '#/definitions/domain.Tokens'
         "422":
-          description: ""
+          description: Unprocessable Entity
         "500":
-          description: ""
+          description: Internal Server Error
       summary: User SignIn
       tags:
       - user-auth

@@ -39,6 +39,7 @@ func (s *Server) listSchemas(w http.ResponseWriter, r *http.Request) {
 
 // @Summary Create Schema
 // @Description schema creation process
+// @Security UsersAuth
 // @Tags schema
 // @Param request body domain.NewSchemaInput true "query params"
 // @Success 201
@@ -71,6 +72,7 @@ func (s *Server) createSchema(w http.ResponseWriter, r *http.Request) {
 
 // @Summary Get Schema By ID
 // @Description get course by id
+// @Security UsersAuth
 // @Tags schema
 // @Success 200 {object} SchemaResponse
 // @Param id path string true "schema id"
@@ -106,6 +108,7 @@ func (s *Server) getSchemaById(w http.ResponseWriter, r *http.Request) {
 
 // @Summary Update Schema By ID
 // @Description update schema by id
+// @Security UsersAuth
 // @Tags schema
 // @Param input body domain.UpdateSchemaInput true "update info"
 // @Success 200 {object} SchemaResponse
@@ -150,6 +153,7 @@ func (s *Server) updateSchema(w http.ResponseWriter, r *http.Request) {
 
 // @Summary Delete Schema
 // @Description delete schema
+// @Security UsersAuth
 // @Tags schema
 // @Param id path string true "schema id"
 // @Success 200
