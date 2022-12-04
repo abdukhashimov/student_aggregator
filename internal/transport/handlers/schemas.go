@@ -110,6 +110,7 @@ func (s *Server) getSchemaById(w http.ResponseWriter, r *http.Request) {
 // @Description update schema by id
 // @Security UsersAuth
 // @Tags schema
+// @Param id path string true "schema id"
 // @Param input body domain.UpdateSchemaInput true "update info"
 // @Success 200 {object} SchemaResponse
 // @Failure 404

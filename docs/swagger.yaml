@@ -288,6 +288,11 @@ paths:
       - application/json
       description: update schema by id
       parameters:
+      - description: schema id
+        in: path
+        name: id
+        required: true
+        type: string
       - description: update info
         in: body
         name: input
