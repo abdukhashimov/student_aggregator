@@ -249,6 +249,13 @@ const docTemplate = `{
                 "summary": "Update Schema By ID",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "schema id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "update info",
                         "name": "input",
                         "in": "body",
