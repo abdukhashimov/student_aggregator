@@ -11,8 +11,9 @@ import (
 )
 
 type FieldSchema struct {
-	Col  string `json:"col"`
-	Name string `json:"name"`
+	Col        string `json:"col"`
+	Name       string `json:"name"`
+	IsMultiple bool   `json:"is_multiple"`
 }
 
 type Schema struct {
@@ -92,8 +93,8 @@ func ParseXLSXFile[T any](in *[]T, r io.Reader, s Schema) error {
 
 // getDataMapList maps excelize.File f to value map according to schema s.
 // Returns data map and error.
-func getDataMapList(f *excelize.File, s Schema) ([]map[string]string, error) {
-	var dataMapList []map[string]string
+func getDataMapList(f *excelize.File, s Schema) ([]map[string]interface{}, error) {
+	var dataMapList []map[string]interface{}
 	sl := f.GetSheetList()
 	for _, sheetName := range sl {
 		currRowIndex := 1
@@ -124,14 +125,25 @@ func getDataMapList(f *excelize.File, s Schema) ([]map[string]string, error) {
 
 // mapRow maps excelize.File f row data to value map using schema by index and sheetName.
 // Returns row data values map and an error.
-func mapRow(index int, sheetName string, f *excelize.File, s Schema) (map[string]string, error) {
-	fim := make(map[string]string)
+func mapRow(index int, sheetName string, f *excelize.File, s Schema) (map[string]interface{}, error) {
+	fim := make(map[string]interface{})
 	for _, fs := range s.Fields {
 		value, err := f.GetCellValue(sheetName, fmt.Sprintf("%s%v", fs.Col, index))
 		if err != nil {
 			return nil, err
 		}
-		fim[fs.Name] = value
+		if fs.IsMultiple {
+			if value != "" {
+				values, ok := fim[fs.Name].([]string)
+				if ok {
+					fim[fs.Name] = append(values, value)
+				} else {
+					fim[fs.Name] = []string{value}
+				}
+			}
+		} else {
+			fim[fs.Name] = value
+		}
 	}
 	return fim, nil
 }

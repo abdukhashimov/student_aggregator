@@ -156,11 +156,12 @@ func TestParseCSVFile(t *testing.T) {
 
 func TestParseXLSXFile(t *testing.T) {
 	type student struct {
-		Name        string `mapstructure:"first_name"`
-		Surname     string `mapstructure:"last_name"`
-		Email       string `mapstructure:"email"`
-		Age         int    `mapstructure:"age"`
-		IsGraduated bool   `mapstructure:"graduated"`
+		Name        string   `mapstructure:"first_name"`
+		Surname     string   `mapstructure:"last_name"`
+		Email       string   `mapstructure:"email"`
+		Age         int      `mapstructure:"age"`
+		IsGraduated bool     `mapstructure:"graduated"`
+		Languages   []string `mapstructure:"languages"`
 	}
 
 	schema := Schema{
@@ -173,6 +174,8 @@ func TestParseXLSXFile(t *testing.T) {
 			{Name: "email", Col: "C"},
 			{Name: "age", Col: "D"},
 			{Name: "graduated", Col: "E"},
+			{Name: "languages", Col: "F", IsMultiple: true},
+			{Name: "languages", Col: "G", IsMultiple: true},
 		},
 	}
 	type args struct {
@@ -195,16 +198,16 @@ func TestParseXLSXFile(t *testing.T) {
 					t,
 					[]string{"Sheet1", "Sheet2"},
 					map[string][]interface{}{
-						"A1": {"First Name", "Last Name", "Email", "Age", "Graduated"},
+						"A1": {"First Name", "Last Name", "Email", "Age", "Graduated", "Language", "Language"},
 						"A2": {"Anakin", "Skywalker", "anakin.skywalker@deathstar.imp", 9, false},
-						"A3": {"Obi-Wan", "Kenobi", "obi@jedi.rules", 25, true},
+						"A3": {"Obi-Wan", "Kenobi", "obi@jedi.rules", 25, true, "Golang", "Python"},
 					},
 				),
 				schema,
 			},
 			[]student{
-				{"Anakin", "Skywalker", "anakin.skywalker@deathstar.imp", 9, false},
-				{"Obi-Wan", "Kenobi", "obi@jedi.rules", 25, true},
+				{"Anakin", "Skywalker", "anakin.skywalker@deathstar.imp", 9, false, nil},
+				{"Obi-Wan", "Kenobi", "obi@jedi.rules", 25, true, []string{"Golang", "Python"}},
 			},
 			2,
 			false,
