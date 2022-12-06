@@ -510,6 +510,31 @@ paths:
       summary: List Students
       tags:
       - student
+  /students-by-file-name/{fileName}:
+    delete:
+      consumes:
+      - application/json
+      description: delete student by file name
+      parameters:
+      - description: file name
+        in: path
+        name: fileName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
+      summary: Delete Student By File Name
+      tags:
+      - student
   /students/{id}:
     delete:
       consumes:

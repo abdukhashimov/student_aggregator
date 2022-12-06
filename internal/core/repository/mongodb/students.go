@@ -144,3 +144,9 @@ func (sr *StudentsRepo) Delete(ctx context.Context, id string) error {
 
 	return err
 }
+
+func (sr *StudentsRepo) DeleteByFileName(ctx context.Context, fileName string) error {
+	_, err := sr.col.DeleteOne(ctx, bson.M{"file_name": fileName})
+
+	return err
+}
