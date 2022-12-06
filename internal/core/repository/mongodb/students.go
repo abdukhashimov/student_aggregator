@@ -17,6 +17,8 @@ type StudentCollection interface {
 		opts ...*options.InsertOneOptions) (*mongo.InsertOneResult, error)
 	FindOne(ctx context.Context, filter interface{},
 		opts ...*options.FindOneOptions) *mongo.SingleResult
+	Find(ctx context.Context, filter interface{},
+		opts ...*options.FindOptions) (cur *mongo.Cursor, err error)
 }
 
 type StudentsRepo struct {
@@ -78,4 +80,27 @@ func (sr *StudentsRepo) save(ctx context.Context, student domain.StudentRecord) 
 	oid := getIdFromObjectID(res.InsertedID)
 
 	return oid, nil
+}
+
+func (sr *StudentsRepo) GetAll(ctx context.Context, options domain.ListStudentsOptions) ([]domain.StudentRecord, error) {
+	var students []domain.StudentRecord
+	opts := getPaginationOpts(options.Limit, options.Skip)
+	opts.SetSort(options.Sort)
+
+	filter := bson.M{}
+	if options.Email != "" {
+		filter["email"] = options.Email
+	}
+	if options.Source != "" {
+		filter["source"] = options.Source
+	}
+
+	cur, err := sr.col.Find(ctx, filter, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	err = cur.All(ctx, &students)
+
+	return students, err
 }

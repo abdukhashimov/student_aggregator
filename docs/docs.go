@@ -379,6 +379,72 @@ const docTemplate = `{
                 }
             }
         },
+        "/students": {
+            "get": {
+                "security": [
+                    {
+                        "UsersAuth": []
+                    }
+                ],
+                "description": "retrieves all students",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "student"
+                ],
+                "summary": "List Students",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "skip",
+                        "name": "skip",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "email",
+                        "name": "email",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "source",
+                        "name": "source",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "sort",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.StudentsResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/students/{id}": {
             "get": {
                 "security": [
@@ -859,6 +925,17 @@ const docTemplate = `{
             "properties": {
                 "student": {
                     "$ref": "#/definitions/domain.StudentRecord"
+                }
+            }
+        },
+        "handlers.StudentsResponse": {
+            "type": "object",
+            "properties": {
+                "students": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.StudentRecord"
+                    }
                 }
             }
         },

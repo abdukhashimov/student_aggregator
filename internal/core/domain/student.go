@@ -41,3 +41,11 @@ type StudentRSS struct {
 	ApplicationDate string    `json:"application_date" mapstructure:"application_date" bson:"application_date,omitempty"`
 	Projects        []Project `json:"projects" mapstructure:"projects" bson:"projects,omitempty"`
 }
+
+type ListStudentsOptions struct {
+	Email  string
+	Source string
+	Sort   map[string]int
+	Limit  int
+	Skip   int
+}

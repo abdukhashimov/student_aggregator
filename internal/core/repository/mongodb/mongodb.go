@@ -4,6 +4,7 @@ import (
 	"errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/abdukhashimov/student_aggregator/internal/core/repository"
 )
@@ -35,4 +36,13 @@ func getIdFromObjectID(in interface{}) string {
 	}
 
 	return ""
+}
+
+func getPaginationOpts(l int, s int) *options.FindOptions {
+	limit := int64(l)
+	skip := int64(s)
+	return &options.FindOptions{
+		Limit: &limit,
+		Skip:  &skip,
+	}
 }
