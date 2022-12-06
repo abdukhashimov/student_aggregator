@@ -38,6 +38,7 @@ func (s *Server) routes() {
 		authApiRoutes.Handle("/aggregator/parse", validatorWrapper[domain.ParseFileInput](s.parseFile)).Methods(http.MethodPost)
 		// student
 		authApiRoutes.Handle("/students/{id}", http.HandlerFunc(s.getStudentById)).Methods(http.MethodGet)
+		authApiRoutes.Handle("/students", http.HandlerFunc(s.listStudents)).Methods(http.MethodGet)
 
 	}
 }

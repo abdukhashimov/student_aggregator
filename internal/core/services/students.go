@@ -27,3 +27,9 @@ func (s *StudentsService) GetStudentById(ctx context.Context, id string) (*domai
 
 	return student, err
 }
+
+func (s *StudentsService) ListStudents(ctx context.Context, options domain.ListStudentsOptions) ([]domain.StudentRecord, error) {
+	schemas, err := s.repo.GetAll(ctx, options)
+
+	return schemas, err
+}

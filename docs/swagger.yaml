@@ -219,6 +219,13 @@ definitions:
       student:
         $ref: '#/definitions/domain.StudentRecord'
     type: object
+  handlers.StudentsResponse:
+    properties:
+      students:
+        items:
+          $ref: '#/definitions/domain.StudentRecord'
+        type: array
+    type: object
   handlers.UserProfileResponse:
     properties:
       user:
@@ -459,6 +466,48 @@ paths:
       summary: Uploads files to blob storage
       tags:
       - file-upload
+  /students:
+    get:
+      consumes:
+      - application/json
+      description: retrieves all students
+      parameters:
+      - description: limit
+        in: query
+        name: limit
+        type: integer
+      - description: skip
+        in: query
+        name: skip
+        type: integer
+      - description: email
+        in: query
+        name: email
+        type: string
+      - description: source
+        in: query
+        name: source
+        type: string
+      - description: sort
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.StudentsResponse'
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
+      summary: List Students
+      tags:
+      - student
   /students/{id}:
     get:
       consumes:

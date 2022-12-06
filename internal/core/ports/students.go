@@ -7,10 +7,12 @@ import (
 
 type StudentsService interface {
 	GetStudentById(ctx context.Context, id string) (*domain.StudentRecord, error)
+	ListStudents(ctx context.Context, options domain.ListStudentsOptions) ([]domain.StudentRecord, error)
 }
 
 type StudentsStore interface {
 	SaveRSS(ctx context.Context, email string, student domain.StudentRSS) (string, error)
 	SaveWAC(ctx context.Context, email string, student domain.StudentWAC) (string, error)
 	GetById(ctx context.Context, id string) (*domain.StudentRecord, error)
+	GetAll(ctx context.Context, options domain.ListStudentsOptions) ([]domain.StudentRecord, error)
 }

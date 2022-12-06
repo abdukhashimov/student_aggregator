@@ -31,6 +31,11 @@ func (m *collectionMock) FindOne(ctx context.Context, filter interface{},
 	panic("implement me")
 }
 
+func (m *collectionMock) Find(ctx context.Context, filter interface{},
+	opts ...*options.FindOptions) (cur *mongo.Cursor, err error) {
+	panic("implement me")
+}
+
 func TestStudentsRepo_SaveRSS(t *testing.T) {
 	type args struct {
 		ctx     context.Context

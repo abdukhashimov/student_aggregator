@@ -50,3 +50,40 @@ func (s *Server) getStudentById(w http.ResponseWriter, r *http.Request) {
 		Student: *student,
 	})
 }
+
+// @Summary List Students
+// @Description retrieves all students
+// @Security UsersAuth
+// @Tags student
+// @Success 200 {object} StudentsResponse
+// @Param limit query int false "limit"
+// @Param skip query int false "skip"
+// @Param email query string false "email"
+// @Param source query string false "source"
+// @Param sort query string false "sort"
+// @Failure 401
+// @Failure 500
+// @Accept json
+// @Produce json
+// @Router /students [get]
+func (s *Server) listStudents(w http.ResponseWriter, r *http.Request) {
+	params := r.URL.Query()
+	limit, skip := getLimitSkip(params)
+	sort := getSort(params)
+
+	students, err := s.studentsService.ListStudents(r.Context(), domain.ListStudentsOptions{
+		Email:  params.Get("email"),
+		Source: params.Get("source"),
+		Sort:   sort,
+		Limit:  limit,
+		Skip:   skip,
+	})
+	if err != nil {
+		sendServerError(w, err)
+		return
+	}
+
+	writeJSON(w, http.StatusOK, StudentsResponse{
+		Students: students,
+	})
+}

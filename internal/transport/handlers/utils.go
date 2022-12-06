@@ -5,8 +5,21 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
 
 	"github.com/abdukhashimov/student_aggregator/internal/pkg/logger"
+)
+
+const (
+	defaultLimit       = 20
+	defaultSortField   = "_id,DESC"
+	defaultSortType    = -1
+	DescSortType       = -1
+	AscSortType        = 1
+	DescSortTypeString = "DESC"
+	AscSortTypeString  = "ASC"
 )
 
 type M map[string]interface{}
@@ -83,4 +96,48 @@ func sendDuplicatedError(w http.ResponseWriter, field string) {
 
 func writeErrorResponse(w http.ResponseWriter, code int, errs interface{}) {
 	writeJSON(w, code, M{"errors": errs})
+}
+
+func getLimitSkip(params url.Values) (int, int) {
+	limit := defaultLimit
+	if params.Has("limit") {
+		var err error
+		limit, err = strconv.Atoi(params.Get("limit"))
+		if err != nil {
+			limit = defaultLimit
+		}
+	}
+	skip := 0
+	if params.Has("skip") {
+		var err error
+		skip, err = strconv.Atoi(params.Get("skip"))
+		if err != nil {
+			skip = 0
+		}
+	}
+	return limit, skip
+}
+
+func getSort(params url.Values) map[string]int {
+	sort := map[string]int{
+		defaultSortField: defaultSortType,
+	}
+	if params.Has("sort") {
+		parts := strings.Split(params.Get("sort"), ",")
+		if len(parts) == 1 {
+			delete(sort, defaultSortField)
+			sort[parts[0]] = defaultSortType
+		} else if len(parts) == 2 {
+			if parts[1] == DescSortTypeString {
+				delete(sort, defaultSortField)
+				sort[parts[0]] = DescSortType
+			}
+			if parts[1] == AscSortTypeString {
+				delete(sort, defaultSortField)
+				sort[parts[0]] = AscSortType
+			}
+		}
+
+	}
+	return sort
 }
