@@ -535,6 +535,40 @@ paths:
       summary: Get Student By ID
       tags:
       - student
+    put:
+      consumes:
+      - application/json
+      description: update student by id
+      parameters:
+      - description: student id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: update info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.StudentRecord'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.StudentResponse'
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
+      summary: Update Student By ID
+      tags:
+      - student
   /user:
     get:
       consumes:

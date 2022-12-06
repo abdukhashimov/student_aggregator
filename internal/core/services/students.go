@@ -33,3 +33,14 @@ func (s *StudentsService) ListStudents(ctx context.Context, options domain.ListS
 
 	return schemas, err
 }
+
+func (s *StudentsService) UpdateStudent(ctx context.Context, id string, input domain.StudentRecord) (*domain.StudentRecord, error) {
+	err := s.repo.Update(ctx, id, input)
+	if err != nil {
+		return nil, err
+	}
+
+	student, err := s.repo.GetById(ctx, id)
+
+	return student, err
+}

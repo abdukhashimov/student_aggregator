@@ -39,6 +39,7 @@ func (s *Server) routes() {
 		// student
 		authApiRoutes.Handle("/students/{id}", http.HandlerFunc(s.getStudentById)).Methods(http.MethodGet)
 		authApiRoutes.Handle("/students", http.HandlerFunc(s.listStudents)).Methods(http.MethodGet)
+		authApiRoutes.Handle("/students/{id}", http.HandlerFunc(s.updateStudent)).Methods(http.MethodPut)
 
 	}
 }

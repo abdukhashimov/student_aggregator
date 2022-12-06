@@ -87,3 +87,45 @@ func (s *Server) listStudents(w http.ResponseWriter, r *http.Request) {
 		Students: students,
 	})
 }
+
+// @Summary Update Student By ID
+// @Description update student by id
+// @Security UsersAuth
+// @Tags student
+// @Param id path string true "student id"
+// @Param input body domain.StudentRecord true "update info"
+// @Success 200 {object} StudentResponse
+// @Failure 404
+// @Failure 422
+// @Failure 500
+// @Accept  json
+// @Produce  json
+// @Router /students/{id} [put]
+func (s *Server) updateStudent(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	if id == "" {
+		sendUnprocessableEntityError(w, errors.New("id should not be empty"))
+		return
+	}
+
+	input := new(domain.StudentRecord)
+	if err := readJSON(r.Body, input); err != nil {
+		sendUnprocessableEntityError(w, err)
+		return
+	}
+
+	student, err := s.studentsService.UpdateStudent(r.Context(), id, *input)
+	if err != nil {
+		if err == domain.ErrNotFound {
+			sendNotFoundError(w)
+			return
+		}
+		sendServerError(w, err)
+		return
+	}
+
+	writeJSON(w, http.StatusOK, StudentResponse{
+		Student: *student,
+	})
+}

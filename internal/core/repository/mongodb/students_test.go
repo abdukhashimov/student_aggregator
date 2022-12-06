@@ -36,6 +36,11 @@ func (m *collectionMock) Find(ctx context.Context, filter interface{},
 	panic("implement me")
 }
 
+func (m *collectionMock) UpdateOne(ctx context.Context, filter interface{}, update interface{},
+	opts ...*options.UpdateOptions) (*mongo.UpdateResult, error) {
+	panic("implement me")
+}
+
 func TestStudentsRepo_SaveRSS(t *testing.T) {
 	type args struct {
 		ctx     context.Context
