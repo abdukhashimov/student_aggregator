@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/xuri/excelize/v2"
@@ -14,6 +15,8 @@ type FieldSchema struct {
 	Col        string `json:"col"`
 	Name       string `json:"name"`
 	IsMultiple bool   `json:"is_multiple"`
+	IsMap      bool   `json:"is_map"`
+	MapStart   bool   `json:"map_start"`
 }
 
 type Schema struct {
@@ -132,17 +135,44 @@ func mapRow(index int, sheetName string, f *excelize.File, s Schema) (map[string
 		if err != nil {
 			return nil, err
 		}
-		if fs.IsMultiple {
-			if value != "" {
-				values, ok := fim[fs.Name].([]string)
-				if ok {
-					fim[fs.Name] = append(values, value)
-				} else {
-					fim[fs.Name] = []string{value}
+
+		if value != "" {
+			if fs.IsMap {
+				parts := strings.Split(fs.Name, ".")
+				if len(parts) == 2 {
+					if fs.IsMultiple {
+						values, ok := fim[parts[0]].([]map[string]interface{})
+						if !ok {
+							values = []map[string]interface{}{}
+						}
+						mapIndex := len(values) - 1
+						if fs.MapStart {
+							values = append(values, make(map[string]interface{}))
+							mapIndex++
+						}
+
+						values[mapIndex][parts[1]] = value
+						fim[parts[0]] = values
+					} else {
+						mapValue, ok := fim[parts[0]].(map[string]interface{})
+						if !ok {
+							mapValue = map[string]interface{}{}
+						}
+
+						mapValue[parts[1]] = value
+						fim[parts[0]] = mapValue
+					}
 				}
+			} else if fs.IsMultiple {
+				values, ok := fim[fs.Name].([]interface{})
+				if !ok {
+					fim[fs.Name] = []interface{}{}
+				}
+
+				fim[fs.Name] = append(values, value)
+			} else {
+				fim[fs.Name] = value
 			}
-		} else {
-			fim[fs.Name] = value
 		}
 	}
 	return fim, nil
