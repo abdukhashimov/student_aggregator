@@ -9,6 +9,7 @@ type StudentsService interface {
 	GetStudentById(ctx context.Context, id string) (*domain.StudentRecord, error)
 	ListStudents(ctx context.Context, options domain.ListStudentsOptions) ([]domain.StudentRecord, error)
 	UpdateStudent(ctx context.Context, id string, input domain.StudentRecord) (*domain.StudentRecord, error)
+	DeleteStudent(ctx context.Context, id string) error
 }
 
 type StudentsStore interface {
@@ -17,4 +18,5 @@ type StudentsStore interface {
 	GetById(ctx context.Context, id string) (*domain.StudentRecord, error)
 	GetAll(ctx context.Context, options domain.ListStudentsOptions) ([]domain.StudentRecord, error)
 	Update(ctx context.Context, id string, input domain.StudentRecord) error
+	Delete(ctx context.Context, id string) error
 }

@@ -44,3 +44,9 @@ func (s *StudentsService) UpdateStudent(ctx context.Context, id string, input do
 
 	return student, err
 }
+
+func (s *StudentsService) DeleteStudent(ctx context.Context, id string) error {
+	err := s.repo.Delete(ctx, id)
+
+	return err
+}
