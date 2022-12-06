@@ -26,6 +26,11 @@ func (m *collectionMock) InsertOne(ctx context.Context, document interface{},
 	return &mongo.InsertOneResult{InsertedID: 1}, nil
 }
 
+func (m *collectionMock) FindOne(ctx context.Context, filter interface{},
+	opts ...*options.FindOneOptions) *mongo.SingleResult {
+	panic("implement me")
+}
+
 func TestStudentsRepo_SaveRSS(t *testing.T) {
 	type args struct {
 		ctx     context.Context
