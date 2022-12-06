@@ -816,6 +816,9 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
+                "file_name": {
+                    "type": "string"
+                },
                 "first_name": {
                     "type": "string"
                 },

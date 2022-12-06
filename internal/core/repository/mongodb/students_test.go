@@ -77,7 +77,7 @@ func TestStudentsRepo_SaveRSS(t *testing.T) {
 			mock := collectionMock{}
 			repo := newRepo(&mock)
 
-			_, err := repo.SaveRSS(tt.args.ctx, "", tt.args.student)
+			_, err := repo.SaveRSS(tt.args.ctx, "", "", tt.args.student)
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("SaveRss() error expected but got %v", err)
@@ -127,7 +127,7 @@ func TestStudentsRepo_SaveWAC(t *testing.T) {
 			mock := collectionMock{}
 			repo := newRepo(&mock)
 
-			_, err := repo.SaveWAC(tt.args.ctx, "", tt.args.student)
+			_, err := repo.SaveWAC(tt.args.ctx, "", "", tt.args.student)
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("SaveWAC() error expected but got %v", err)

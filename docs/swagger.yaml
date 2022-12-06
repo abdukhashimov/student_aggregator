@@ -110,6 +110,8 @@ definitions:
         type: string
       email:
         type: string
+      file_name:
+        type: string
       first_name:
         type: string
       full_name:
