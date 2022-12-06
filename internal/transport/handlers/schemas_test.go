@@ -53,7 +53,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 		testCases: []SchemaTestCase{
 			{
 				name:         "success",
-				expectedBody: `{"schemas":[{"id":"1","name":"RSS","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"first_name"},{"col":"B","name":"last_name"},{"col":"C","name":"email"}]},{"id":"2","name":"WAC","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"name"},{"col":"B","name":"surname"},{"col":"C","name":"email"}]}]}`,
+				expectedBody: `{"schemas":[{"id":"1","name":"RSS","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"first_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"B","name":"last_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"C","name":"email","is_multiple":false,"is_map":false,"map_start":false}]},{"id":"2","name":"WAC","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"name","is_multiple":false,"is_map":false,"map_start":false},{"col":"B","name":"surname","is_multiple":false,"is_map":false,"map_start":false},{"col":"C","name":"email","is_multiple":false,"is_map":false,"map_start":false}]}]}`,
 				expectedCode: http.StatusOK,
 			},
 			{
@@ -86,7 +86,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 						{Name: "email", Col: "C"},
 					},
 				},
-				expectedBody: `{"schema":{"id":"3","name":"New Schema","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"name"},{"col":"B","name":"surname"},{"col":"C","name":"email"}]}}`,
+				expectedBody: `{"schema":{"id":"3","name":"New Schema","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"name","is_multiple":false,"is_map":false,"map_start":false},{"col":"B","name":"surname","is_multiple":false,"is_map":false,"map_start":false},{"col":"C","name":"email","is_multiple":false,"is_map":false,"map_start":false}]}}`,
 				expectedCode: http.StatusCreated,
 			},
 			{
@@ -141,7 +141,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					})
 					return r
 				},
-				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"first_name"},{"col":"B","name":"last_name"},{"col":"C","name":"email"}]}}`,
+				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"first_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"B","name":"last_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"C","name":"email","is_multiple":false,"is_map":false,"map_start":false}]}}`,
 				expectedCode: http.StatusOK,
 			},
 			{
@@ -190,7 +190,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 					Headers:    &updateSchemaHeaders,
 					Fields:     &updateSchemaFields,
 				},
-				expectedBody: `{"schema":{"id":"1","name":"updateSchemaName","version":"updateSchemaVersion","schema_type":"updateSchemaSchemaType","headers":false,"fields":[{"col":"D","name":"name"},{"col":"E","name":"surname"},{"col":"F","name":"em"}]}}`,
+				expectedBody: `{"schema":{"id":"1","name":"updateSchemaName","version":"updateSchemaVersion","schema_type":"updateSchemaSchemaType","headers":false,"fields":[{"col":"D","name":"name","is_multiple":false,"is_map":false,"map_start":false},{"col":"E","name":"surname","is_multiple":false,"is_map":false,"map_start":false},{"col":"F","name":"em","is_multiple":false,"is_map":false,"map_start":false}]}}`,
 				expectedCode: http.StatusOK,
 			},
 			{
@@ -204,7 +204,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 				requestInput: &domain.UpdateSchemaInput{
 					Name: &updateSchemaName,
 				},
-				expectedBody: `{"schema":{"id":"1","name":"updateSchemaName","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"first_name"},{"col":"B","name":"last_name"},{"col":"C","name":"email"}]}}`,
+				expectedBody: `{"schema":{"id":"1","name":"updateSchemaName","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"first_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"B","name":"last_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"C","name":"email","is_multiple":false,"is_map":false,"map_start":false}]}}`,
 				expectedCode: http.StatusOK,
 			},
 			{
@@ -218,7 +218,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 				requestInput: &domain.UpdateSchemaInput{
 					Version: &updateSchemaVersion,
 				},
-				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"updateSchemaVersion","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"first_name"},{"col":"B","name":"last_name"},{"col":"C","name":"email"}]}}`,
+				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"updateSchemaVersion","schema_type":"coords","headers":true,"fields":[{"col":"A","name":"first_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"B","name":"last_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"C","name":"email","is_multiple":false,"is_map":false,"map_start":false}]}}`,
 				expectedCode: http.StatusOK,
 			},
 			{
@@ -232,7 +232,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 				requestInput: &domain.UpdateSchemaInput{
 					SchemaType: &updateSchemaSchemaType,
 				},
-				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"updateSchemaSchemaType","headers":true,"fields":[{"col":"A","name":"first_name"},{"col":"B","name":"last_name"},{"col":"C","name":"email"}]}}`,
+				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"updateSchemaSchemaType","headers":true,"fields":[{"col":"A","name":"first_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"B","name":"last_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"C","name":"email","is_multiple":false,"is_map":false,"map_start":false}]}}`,
 				expectedCode: http.StatusOK,
 			},
 			{
@@ -246,7 +246,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 				requestInput: &domain.UpdateSchemaInput{
 					Headers: &updateSchemaHeaders,
 				},
-				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"coords","headers":false,"fields":[{"col":"A","name":"first_name"},{"col":"B","name":"last_name"},{"col":"C","name":"email"}]}}`,
+				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"coords","headers":false,"fields":[{"col":"A","name":"first_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"B","name":"last_name","is_multiple":false,"is_map":false,"map_start":false},{"col":"C","name":"email","is_multiple":false,"is_map":false,"map_start":false}]}}`,
 				expectedCode: http.StatusOK,
 			},
 			{
@@ -260,7 +260,7 @@ var SchemasTestCases = []SchemaTestCaseGroup{
 				requestInput: &domain.UpdateSchemaInput{
 					Fields: &updateSchemaFields,
 				},
-				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"D","name":"name"},{"col":"E","name":"surname"},{"col":"F","name":"em"}]}}`,
+				expectedBody: `{"schema":{"id":"1","name":"RSS","version":"1.0.0","schema_type":"coords","headers":true,"fields":[{"col":"D","name":"name","is_multiple":false,"is_map":false,"map_start":false},{"col":"E","name":"surname","is_multiple":false,"is_map":false,"map_start":false},{"col":"F","name":"em","is_multiple":false,"is_map":false,"map_start":false}]}}`,
 				expectedCode: http.StatusOK,
 			},
 			{

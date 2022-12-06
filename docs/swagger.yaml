@@ -4,6 +4,12 @@ definitions:
     properties:
       col:
         type: string
+      is_map:
+        type: boolean
+      is_multiple:
+        type: boolean
+      map_start:
+        type: boolean
       name:
         type: string
     type: object
@@ -28,6 +34,16 @@ definitions:
     - name
     - schema_type
     - version
+    type: object
+  domain.ParseFileInput:
+    properties:
+      file_name:
+        type: string
+      schema_id:
+        type: string
+    required:
+    - file_name
+    - schema_id
     type: object
   domain.Schema:
     properties:
@@ -122,6 +138,8 @@ definitions:
     properties:
       file_key:
         type: string
+      file_name:
+        type: string
       file_url:
         type: string
     type: object
@@ -147,6 +165,32 @@ info:
   description: This API contains the source for the Student Aggregator app
   title: Student Aggregator API
 paths:
+  /aggregator/parse:
+    post:
+      consumes:
+      - application/json
+      description: File Parsing process
+      parameters:
+      - description: query params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ParseFileInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
+      summary: Parse File
+      tags:
+      - parser
   /auth/refresh:
     post:
       consumes:

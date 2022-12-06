@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/abdukhashimov/student_aggregator/pkg/parser"
+
 type Schema struct {
 	ID         string        `json:"id" bson:"_id,omitempty"`
 	Name       string        `json:"name" bson:"name"`
@@ -11,8 +13,11 @@ type Schema struct {
 }
 
 type FieldSchema struct {
-	Col  string `json:"col" bson:"col"`
-	Name string `json:"name" bson:"name"`
+	Col        string `json:"col" bson:"col"`
+	Name       string `json:"name" bson:"name"`
+	IsMultiple bool   `json:"is_multiple" bson:"is_multiple"`
+	IsMap      bool   `json:"is_map" bson:"is_map"`
+	MapStart   bool   `json:"map_start" bson:"map_start"`
 }
 
 type NewSchemaInput struct {
@@ -30,4 +35,24 @@ type UpdateSchemaInput struct {
 	SchemaType *string        `json:"schema_type" bson:"schema_type,omitempty" validate:"omitempty,required"`
 	Headers    *bool          `json:"headers" bson:"headers,omitempty" validate:"omitempty,required"`
 	Fields     *[]FieldSchema `json:"fields" bson:"fields,omitempty" validate:"omitempty,required"`
+}
+
+func (s *Schema) ConvertToParserSchema() parser.Schema {
+	var fields []parser.FieldSchema
+	for _, v := range s.Fields {
+		fields = append(fields, parser.FieldSchema{
+			Col:        v.Col,
+			Name:       v.Name,
+			IsMultiple: v.IsMultiple,
+			IsMap:      v.IsMap,
+			MapStart:   v.MapStart,
+		})
+	}
+
+	return parser.Schema{
+		Version:    s.Version,
+		SchemaType: s.SchemaType,
+		Headers:    s.Headers,
+		Fields:     fields,
+	}
 }

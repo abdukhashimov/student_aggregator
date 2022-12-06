@@ -22,12 +22,13 @@ import (
 )
 
 type Server struct {
-	server         *http.Server
-	router         *mux.Router
-	userService    ports.UsersService
-	schemasService ports.SchemaService
-	storageService ports.StorageService
-	config         *config.Config
+	server            *http.Server
+	router            *mux.Router
+	userService       ports.UsersService
+	schemasService    ports.SchemaService
+	storageService    ports.StorageService
+	aggregatorService ports.AggregatorService
+	config            *config.Config
 }
 
 func NewServer(db *mongo.Database, storageClient *minio.Client, cfg *config.Config) *Server {
@@ -47,6 +48,7 @@ func NewServer(db *mongo.Database, storageClient *minio.Client, cfg *config.Conf
 	servs := services.NewServices(repos, cfg)
 	s.userService = servs.Users
 	s.schemasService = servs.Schemas
+	s.aggregatorService = servs.Aggregator
 
 	s.storageService = servs.Storage
 	s.storageService.SetClient(storageClient)
