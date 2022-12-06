@@ -379,6 +379,49 @@ const docTemplate = `{
                 }
             }
         },
+        "/students/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "UsersAuth": []
+                    }
+                ],
+                "description": "get student by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "student"
+                ],
+                "summary": "Get Student By ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "student id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.StudentResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "security": [
@@ -558,6 +601,23 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.Project": {
+            "type": "object",
+            "properties": {
+                "deadline": {
+                    "type": "string"
+                },
+                "finished_at": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
+                }
+            }
+        },
         "domain.Schema": {
             "type": "object",
             "properties": {
@@ -619,6 +679,78 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 200,
                     "minLength": 6
+                }
+            }
+        },
+        "domain.StudentRecord": {
+            "type": "object",
+            "properties": {
+                "application_date": {
+                    "type": "string"
+                },
+                "attended_events": {
+                    "type": "integer"
+                },
+                "company": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "join_date": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "membership_type": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "preffered_language": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "projects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Project"
+                    }
+                },
+                "receives_community_updates": {
+                    "type": "boolean"
+                },
+                "registered": {
+                    "type": "integer"
+                },
+                "registered_not_visited": {
+                    "type": "integer"
+                },
+                "source": {
+                    "description": "RSS, WAC",
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "status_items": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -719,6 +851,14 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/domain.Schema"
                     }
+                }
+            }
+        },
+        "handlers.StudentResponse": {
+            "type": "object",
+            "properties": {
+                "student": {
+                    "$ref": "#/definitions/domain.StudentRecord"
                 }
             }
         },

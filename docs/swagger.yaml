@@ -45,6 +45,17 @@ definitions:
     - file_name
     - schema_id
     type: object
+  domain.Project:
+    properties:
+      deadline:
+        type: string
+      finished_at:
+        type: string
+      name:
+        type: string
+      score:
+        type: integer
+    type: object
   domain.Schema:
     properties:
       fields:
@@ -88,6 +99,54 @@ definitions:
     - email
     - password
     - username
+    type: object
+  domain.StudentRecord:
+    properties:
+      application_date:
+        type: string
+      attended_events:
+        type: integer
+      company:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      full_name:
+        type: string
+      join_date:
+        type: string
+      last_name:
+        type: string
+      location:
+        type: string
+      membership_type:
+        type: string
+      position:
+        type: string
+      preffered_language:
+        items:
+          type: string
+        type: array
+      projects:
+        items:
+          $ref: '#/definitions/domain.Project'
+        type: array
+      receives_community_updates:
+        type: boolean
+      registered:
+        type: integer
+      registered_not_visited:
+        type: integer
+      source:
+        description: RSS, WAC
+        type: string
+      status:
+        type: string
+      status_items:
+        items:
+          type: string
+        type: array
     type: object
   domain.TokenInput:
     properties:
@@ -154,6 +213,11 @@ definitions:
         items:
           $ref: '#/definitions/domain.Schema'
         type: array
+    type: object
+  handlers.StudentResponse:
+    properties:
+      student:
+        $ref: '#/definitions/domain.StudentRecord'
     type: object
   handlers.UserProfileResponse:
     properties:
@@ -395,6 +459,33 @@ paths:
       summary: Uploads files to blob storage
       tags:
       - file-upload
+  /students/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get student by id
+      parameters:
+      - description: student id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.StudentResponse'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
+      summary: Get Student By ID
+      tags:
+      - student
   /user:
     get:
       consumes:
