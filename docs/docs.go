@@ -16,6 +16,48 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/aggregator/parse": {
+            "post": {
+                "security": [
+                    {
+                        "UsersAuth": []
+                    }
+                ],
+                "description": "File Parsing process",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "parser"
+                ],
+                "summary": "Parse File",
+                "parameters": [
+                    {
+                        "description": "query params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.ParseFileInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/auth/refresh": {
             "post": {
                 "description": "user refresh tokens process",
@@ -456,6 +498,15 @@ const docTemplate = `{
                 "col": {
                     "type": "string"
                 },
+                "is_map": {
+                    "type": "boolean"
+                },
+                "is_multiple": {
+                    "type": "boolean"
+                },
+                "map_start": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 }
@@ -488,6 +539,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.ParseFileInput": {
+            "type": "object",
+            "required": [
+                "file_name",
+                "schema_id"
+            ],
+            "properties": {
+                "file_name": {
+                    "type": "string"
+                },
+                "schema_id": {
                     "type": "string"
                 }
             }
@@ -627,6 +693,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "file_key": {
+                    "type": "string"
+                },
+                "file_name": {
                     "type": "string"
                 },
                 "file_url": {

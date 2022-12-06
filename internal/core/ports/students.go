@@ -6,6 +6,6 @@ import (
 )
 
 type StudentsStore interface {
-	SaveRSS(ctx context.Context, student domain.StudentRSS) (string, error)
-	SaveWAC(ctx context.Context, student domain.StudentWAC) (string, error)
+	SaveRSS(ctx context.Context, email string, student domain.StudentRSS) (string, error)
+	SaveWAC(ctx context.Context, email string, student domain.StudentWAC) (string, error)
 }

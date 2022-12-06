@@ -10,8 +10,9 @@ import (
 )
 
 type FileUploadInfo struct {
-	FileKey string `json:"file_key"`
-	FileURl string `json:"file_url"`
+	FileKey  string `json:"file_key"`
+	FileURl  string `json:"file_url"`
+	FileName string `json:"file_name"`
 }
 
 // @Summary Uploads files to blob storage
@@ -88,8 +89,9 @@ func (s *Server) blobUpload() http.HandlerFunc {
 		}
 
 		writeJSON(w, http.StatusOK, FileUploadInfo{
-			FileKey: base64.RawStdEncoding.EncodeToString([]byte(key)),
-			FileURl: fmt.Sprintf("%s/%s/%s", s.config.Storage.URI, s.config.Storage.BucketName, fileName),
+			FileKey:  base64.RawStdEncoding.EncodeToString([]byte(key)),
+			FileURl:  fmt.Sprintf("%s/%s/%s", s.config.Storage.URI, s.config.Storage.BucketName, fileName),
+			FileName: fileName,
 		})
 	}
 }

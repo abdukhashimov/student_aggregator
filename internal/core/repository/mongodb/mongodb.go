@@ -10,8 +10,9 @@ import (
 
 func NewRepositories(db *mongo.Database) *repository.Repositories {
 	return &repository.Repositories{
-		Users:   NewUsersRepo(db),
-		Schemas: NewSchemaRepo(db),
+		Users:    NewUsersRepo(db),
+		Schemas:  NewSchemaRepo(db),
+		Students: NewStudentsRepo(db),
 	}
 }
 

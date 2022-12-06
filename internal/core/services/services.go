@@ -7,19 +7,22 @@ import (
 )
 
 type Services struct {
-	Users   ports.UsersService
-	Schemas ports.SchemaService
-	Storage ports.StorageService
+	Users      ports.UsersService
+	Schemas    ports.SchemaService
+	Storage    ports.StorageService
+	Aggregator ports.AggregatorService
 }
 
 func NewServices(repos *repository.Repositories, cfg *config.Config) *Services {
 	usersService := NewUsersService(repos.Users, cfg)
 	schemasService := NewSchemaService(repos.Schemas, cfg)
 	storageService := NewStorageService(cfg)
+	parserService := NewAggregatorService(repos.Students, repos.Schemas, storageService)
 
 	return &Services{
-		Users:   usersService,
-		Schemas: schemasService,
-		Storage: storageService,
+		Users:      usersService,
+		Schemas:    schemasService,
+		Storage:    storageService,
+		Aggregator: parserService,
 	}
 }

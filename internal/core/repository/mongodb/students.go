@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-//const studentsCollection = "students"
+const studentsCollection = "students"
 
 type StudentCollection interface {
 	InsertOne(ctx context.Context, document interface{},
@@ -18,25 +18,27 @@ type StudentsRepo struct {
 	col StudentCollection
 }
 
-//func NewStudentsRepo(db *mongo.Database) *StudentsRepo {
-//	return newRepo(db.Collection(studentsCollection))
-//}
+func NewStudentsRepo(db *mongo.Database) *StudentsRepo {
+	return newRepo(db.Collection(studentsCollection))
+}
 
 func newRepo(col StudentCollection) *StudentsRepo {
 	return &StudentsRepo{col}
 }
 
-func (sr *StudentsRepo) SaveRSS(ctx context.Context, student domain.StudentRSS) (string, error) {
+func (sr *StudentsRepo) SaveRSS(ctx context.Context, email string, student domain.StudentRSS) (string, error) {
 	s := domain.StudentRecord{
 		Source:     domain.RSS,
+		Email:      email,
 		StudentRSS: student,
 	}
 	return sr.save(ctx, s)
 }
 
-func (sr *StudentsRepo) SaveWAC(ctx context.Context, student domain.StudentWAC) (string, error) {
+func (sr *StudentsRepo) SaveWAC(ctx context.Context, email string, student domain.StudentWAC) (string, error) {
 	s := domain.StudentRecord{
 		Source:     domain.WAC,
+		Email:      email,
 		StudentWAC: student,
 	}
 	return sr.save(ctx, s)
