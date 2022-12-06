@@ -50,3 +50,9 @@ func (s *StudentsService) DeleteStudent(ctx context.Context, id string) error {
 
 	return err
 }
+
+func (s *StudentsService) DeleteStudentByFileName(ctx context.Context, fileName string) error {
+	err := s.repo.DeleteByFileName(ctx, fileName)
+
+	return err
+}

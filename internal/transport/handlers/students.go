@@ -161,3 +161,31 @@ func (s *Server) deleteStudent(w http.ResponseWriter, r *http.Request) {
 
 	sendCode(w, http.StatusOK)
 }
+
+// @Summary Delete Student By File Name
+// @Description delete student by file name
+// @Security UsersAuth
+// @Tags student
+// @Param fileName path string true "file name"
+// @Success 200
+// @Failure 404
+// @Failure 500
+// @Accept  json
+// @Produce  json
+// @Router /students-by-file-name/{fileName} [delete]
+func (s *Server) deleteStudentByFileName(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fileName := vars["fileName"]
+	if fileName == "" {
+		sendUnprocessableEntityError(w, errors.New("file name should not be empty"))
+		return
+	}
+
+	err := s.studentsService.DeleteStudentByFileName(r.Context(), fileName)
+	if err != nil {
+		sendServerError(w, err)
+		return
+	}
+
+	sendCode(w, http.StatusOK)
+}
