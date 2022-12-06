@@ -511,6 +511,30 @@ paths:
       tags:
       - student
   /students/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete student
+      parameters:
+      - description: student id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - UsersAuth: []
+      summary: Delete Student
+      tags:
+      - student
     get:
       consumes:
       - application/json

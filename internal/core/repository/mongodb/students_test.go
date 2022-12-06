@@ -41,6 +41,11 @@ func (m *collectionMock) UpdateOne(ctx context.Context, filter interface{}, upda
 	panic("implement me")
 }
 
+func (m *collectionMock) DeleteOne(ctx context.Context, filter interface{},
+	opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
+	panic("implement me")
+}
+
 func TestStudentsRepo_SaveRSS(t *testing.T) {
 	type args struct {
 		ctx     context.Context

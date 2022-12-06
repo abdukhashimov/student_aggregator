@@ -21,6 +21,8 @@ type StudentCollection interface {
 		opts ...*options.FindOptions) (cur *mongo.Cursor, err error)
 	UpdateOne(ctx context.Context, filter interface{}, update interface{},
 		opts ...*options.UpdateOptions) (*mongo.UpdateResult, error)
+	DeleteOne(ctx context.Context, filter interface{},
+		opts ...*options.DeleteOptions) (*mongo.DeleteResult, error)
 }
 
 type StudentsRepo struct {
@@ -127,4 +129,18 @@ func (sr *StudentsRepo) Update(ctx context.Context, id string, input domain.Stud
 	}
 
 	return nil
+}
+
+func (sr *StudentsRepo) Delete(ctx context.Context, id string) error {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	res, err := sr.col.DeleteOne(ctx, bson.M{"_id": objectId})
+	if res != nil && res.DeletedCount == 0 {
+		return domain.ErrNotFound
+	}
+
+	return err
 }

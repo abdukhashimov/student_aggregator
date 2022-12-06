@@ -129,3 +129,35 @@ func (s *Server) updateStudent(w http.ResponseWriter, r *http.Request) {
 		Student: *student,
 	})
 }
+
+// @Summary Delete Student
+// @Description delete student
+// @Security UsersAuth
+// @Tags student
+// @Param id path string true "student id"
+// @Success 200
+// @Failure 404
+// @Failure 500
+// @Accept  json
+// @Produce  json
+// @Router /students/{id} [delete]
+func (s *Server) deleteStudent(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	if id == "" {
+		sendUnprocessableEntityError(w, errors.New("id should not be empty"))
+		return
+	}
+
+	err := s.studentsService.DeleteStudent(r.Context(), id)
+	if err != nil {
+		if err == domain.ErrNotFound {
+			sendNotFoundError(w)
+			return
+		}
+		sendServerError(w, err)
+		return
+	}
+
+	sendCode(w, http.StatusOK)
+}
