@@ -35,19 +35,21 @@ func newRepo(col StudentCollection) *StudentsRepo {
 	return &StudentsRepo{col}
 }
 
-func (sr *StudentsRepo) SaveRSS(ctx context.Context, email string, student domain.StudentRSS) (string, error) {
+func (sr *StudentsRepo) SaveRSS(ctx context.Context, fileName string, email string, student domain.StudentRSS) (string, error) {
 	s := domain.StudentRecord{
 		Source:     domain.RSS,
 		Email:      email,
+		FileName:   fileName,
 		StudentRSS: student,
 	}
 	return sr.save(ctx, s)
 }
 
-func (sr *StudentsRepo) SaveWAC(ctx context.Context, email string, student domain.StudentWAC) (string, error) {
+func (sr *StudentsRepo) SaveWAC(ctx context.Context, fileName string, email string, student domain.StudentWAC) (string, error) {
 	s := domain.StudentRecord{
 		Source:     domain.WAC,
 		Email:      email,
+		FileName:   fileName,
 		StudentWAC: student,
 	}
 	return sr.save(ctx, s)

@@ -24,8 +24,8 @@ func NewAggregatorService(studentsRepo ports.StudentsStore, schemasRepo ports.Sc
 	}
 }
 
-func (aggS *AggregatorService) ParseFile(ctx context.Context, FileName string, SchemaID string) error {
-	schema, err := aggS.schemasRepo.GetById(ctx, SchemaID)
+func (aggS *AggregatorService) ParseFile(ctx context.Context, fileName string, schemaID string) error {
+	schema, err := aggS.schemasRepo.GetById(ctx, schemaID)
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func (aggS *AggregatorService) ParseFile(ctx context.Context, FileName string, S
 		return errors.New("unsupported schema")
 	}
 
-	r, _, err := aggS.storage.GetFile(ctx, FileName)
+	r, _, err := aggS.storage.GetFile(ctx, fileName)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (aggS *AggregatorService) ParseFile(ctx context.Context, FileName string, S
 	case domain.RSS:
 		{
 			for _, student := range *students {
-				_, sErr := aggS.studentsRepo.SaveRSS(ctx, student.Email, student.StudentRSS)
+				_, sErr := aggS.studentsRepo.SaveRSS(ctx, fileName, student.Email, student.StudentRSS)
 				if sErr != nil {
 					return sErr
 				}
@@ -67,7 +67,7 @@ func (aggS *AggregatorService) ParseFile(ctx context.Context, FileName string, S
 	case domain.WAC:
 		{
 			for _, student := range *students {
-				_, sErr := aggS.studentsRepo.SaveWAC(ctx, student.Email, student.StudentWAC)
+				_, sErr := aggS.studentsRepo.SaveWAC(ctx, fileName, student.Email, student.StudentWAC)
 				if sErr != nil {
 					return sErr
 				}

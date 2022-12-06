@@ -9,6 +9,7 @@ type StudentRecord struct {
 	Source     string `json:"source" bson:"source"` // RSS, WAC
 	Email      string `json:"email" mapstructure:"email" bson:"email,omitempty"`
 	Status     string `json:"status" bson:"status,omitempty"`
+	FileName   string `json:"file_name" bson:"file_name,omitempty"`
 	StudentRSS `mapstructure:",squash" bson:"student_rss,omitempty"`
 	StudentWAC `mapstructure:",squash" bson:"student_wac,omitempty"`
 }

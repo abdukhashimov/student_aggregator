@@ -12,8 +12,8 @@ type StudentsService interface {
 }
 
 type StudentsStore interface {
-	SaveRSS(ctx context.Context, email string, student domain.StudentRSS) (string, error)
-	SaveWAC(ctx context.Context, email string, student domain.StudentWAC) (string, error)
+	SaveRSS(ctx context.Context, fileName string, email string, student domain.StudentRSS) (string, error)
+	SaveWAC(ctx context.Context, fileName string, email string, student domain.StudentWAC) (string, error)
 	GetById(ctx context.Context, id string) (*domain.StudentRecord, error)
 	GetAll(ctx context.Context, options domain.ListStudentsOptions) ([]domain.StudentRecord, error)
 	Update(ctx context.Context, id string, input domain.StudentRecord) error
