@@ -155,13 +155,24 @@ func TestParseCSVFile(t *testing.T) {
 }
 
 func TestParseXLSXFile(t *testing.T) {
+	type Avatar struct {
+		Url      string `mapstructure:"url"`
+		Preview  string `mapstructure:"preview"`
+		IsPublic bool   `mapstructure:"public"`
+	}
+	type Project struct {
+		Name  string `mapstructure:"name"`
+		Stars int    `mapstructure:"stars"`
+	}
 	type student struct {
-		Name        string   `mapstructure:"first_name"`
-		Surname     string   `mapstructure:"last_name"`
-		Email       string   `mapstructure:"email"`
-		Age         int      `mapstructure:"age"`
-		IsGraduated bool     `mapstructure:"graduated"`
-		Languages   []string `mapstructure:"languages"`
+		Name        string    `mapstructure:"first_name"`
+		Surname     string    `mapstructure:"last_name"`
+		Email       string    `mapstructure:"email"`
+		Age         int       `mapstructure:"age"`
+		IsGraduated bool      `mapstructure:"graduated"`
+		Languages   []string  `mapstructure:"languages"`
+		Avatar      Avatar    `mapstructure:"avatar"`
+		Projects    []Project `mapstructure:"projects"`
 	}
 
 	schema := Schema{
@@ -176,6 +187,13 @@ func TestParseXLSXFile(t *testing.T) {
 			{Name: "graduated", Col: "E"},
 			{Name: "languages", Col: "F", IsMultiple: true},
 			{Name: "languages", Col: "G", IsMultiple: true},
+			{Name: "avatar.url", Col: "H", IsMap: true},
+			{Name: "avatar.preview", Col: "I", IsMap: true},
+			{Name: "avatar.public", Col: "J", IsMap: true},
+			{Name: "projects.name", Col: "K", IsMultiple: true, IsMap: true, MapStart: true},
+			{Name: "projects.stars", Col: "L", IsMultiple: true, IsMap: true},
+			{Name: "projects.name", Col: "M", IsMultiple: true, IsMap: true, MapStart: true},
+			{Name: "projects.stars", Col: "N", IsMultiple: true, IsMap: true},
 		},
 	}
 	type args struct {
@@ -198,16 +216,83 @@ func TestParseXLSXFile(t *testing.T) {
 					t,
 					[]string{"Sheet1", "Sheet2"},
 					map[string][]interface{}{
-						"A1": {"First Name", "Last Name", "Email", "Age", "Graduated", "Language", "Language"},
-						"A2": {"Anakin", "Skywalker", "anakin.skywalker@deathstar.imp", 9, false},
-						"A3": {"Obi-Wan", "Kenobi", "obi@jedi.rules", 25, true, "Golang", "Python"},
+						"A1": {
+							"First Name",
+							"Last Name",
+							"Email",
+							"Age",
+							"Graduated",
+							"Language 1",
+							"Language 2",
+							"Avatar url",
+							"Avatar preview",
+							"Public",
+							"Project #1",
+							"Starts",
+							"Project #2",
+							"Stars",
+						},
+						"A2": {
+							"Anakin",
+							"Skywalker",
+							"anakin.skywalker@deathstar.imp",
+							9,
+							false,
+						},
+						"A3": {
+							"Obi-Wan",
+							"Kenobi",
+							"obi@jedi.rules",
+							25,
+							true,
+							"Golang",
+							"Python",
+							"https://avatars.com/Kenobi",
+							"https://avatars.com/Kenobi/preview",
+							true,
+							"Aggregator",
+							355,
+							"RSS-Aggregator",
+							200,
+						},
 					},
 				),
 				schema,
 			},
 			[]student{
-				{"Anakin", "Skywalker", "anakin.skywalker@deathstar.imp", 9, false, nil},
-				{"Obi-Wan", "Kenobi", "obi@jedi.rules", 25, true, []string{"Golang", "Python"}},
+				{
+					"Anakin",
+					"Skywalker",
+					"anakin.skywalker@deathstar.imp",
+					9,
+					false,
+					nil,
+					Avatar{},
+					nil,
+				},
+				{
+					"Obi-Wan",
+					"Kenobi",
+					"obi@jedi.rules",
+					25,
+					true,
+					[]string{"Golang", "Python"},
+					Avatar{
+						Url:      "https://avatars.com/Kenobi",
+						Preview:  "https://avatars.com/Kenobi/preview",
+						IsPublic: true,
+					},
+					[]Project{
+						{
+							Name:  "Aggregator",
+							Stars: 355,
+						},
+						{
+							Name:  "RSS-Aggregator",
+							Stars: 200,
+						},
+					},
+				},
 			},
 			2,
 			false,
