@@ -24,7 +24,7 @@ func NewSchemaService(repo ports.SchemaStore, cfg *config.Config) *SchemaService
 	}
 }
 
-func (ss SchemaService) NewSchema(ctx context.Context, input domain.NewSchemaInput) (*domain.Schema, error) {
+func (ss *SchemaService) NewSchema(ctx context.Context, input domain.NewSchemaInput) (*domain.Schema, error) {
 	schemaId, err := ss.repo.Create(ctx, domain.Schema{
 		Name:       input.Name,
 		Slug:       getSlug(input.Name),
@@ -42,19 +42,19 @@ func (ss SchemaService) NewSchema(ctx context.Context, input domain.NewSchemaInp
 	return schema, err
 }
 
-func (ss SchemaService) ListSchemas(ctx context.Context) ([]domain.Schema, error) {
+func (ss *SchemaService) ListSchemas(ctx context.Context) ([]domain.Schema, error) {
 	schemas, err := ss.repo.FindAll(ctx)
 
 	return schemas, err
 }
 
-func (ss SchemaService) GetSchemaById(ctx context.Context, id string) (*domain.Schema, error) {
+func (ss *SchemaService) GetSchemaById(ctx context.Context, id string) (*domain.Schema, error) {
 	schema, err := ss.repo.GetById(ctx, id)
 
 	return schema, err
 }
 
-func (ss SchemaService) UpdateSchema(ctx context.Context, id string, input domain.UpdateSchemaInput) (*domain.Schema, error) {
+func (ss *SchemaService) UpdateSchema(ctx context.Context, id string, input domain.UpdateSchemaInput) (*domain.Schema, error) {
 	input.Slug = nil
 	if input.Name != nil {
 		slug := getSlug(*input.Name)
@@ -70,7 +70,7 @@ func (ss SchemaService) UpdateSchema(ctx context.Context, id string, input domai
 	return schema, err
 }
 
-func (ss SchemaService) DeleteSchema(ctx context.Context, id string) error {
+func (ss *SchemaService) DeleteSchema(ctx context.Context, id string) error {
 	err := ss.repo.Delete(ctx, id)
 
 	return err
