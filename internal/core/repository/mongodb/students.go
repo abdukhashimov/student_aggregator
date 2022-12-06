@@ -19,6 +19,8 @@ type StudentCollection interface {
 		opts ...*options.FindOneOptions) *mongo.SingleResult
 	Find(ctx context.Context, filter interface{},
 		opts ...*options.FindOptions) (cur *mongo.Cursor, err error)
+	UpdateOne(ctx context.Context, filter interface{}, update interface{},
+		opts ...*options.UpdateOptions) (*mongo.UpdateResult, error)
 }
 
 type StudentsRepo struct {
@@ -103,4 +105,24 @@ func (sr *StudentsRepo) GetAll(ctx context.Context, options domain.ListStudentsO
 	err = cur.All(ctx, &students)
 
 	return students, err
+}
+
+func (sr *StudentsRepo) Update(ctx context.Context, id string, input domain.StudentRecord) error {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = sr.col.UpdateOne(ctx,
+		bson.M{"_id": objectId}, bson.M{"$set": input})
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return domain.ErrNotFound
+		}
+
+		return err
+	}
+
+	return nil
 }
